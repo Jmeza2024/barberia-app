@@ -19,7 +19,9 @@ Hecha con **Next.js** (pantallas y lógica), **Supabase** (base de datos y login
    ```
 3. En Supabase > SQL Editor, ejecuta en orden:
    - `supabase/migrations/0001_esquema.sql` (crea las tablas y las reglas)
-   - `supabase/seed.sql` (datos de ejemplo)
+   - `supabase/seed.sql` (servicios y productos de ejemplo)
+   - `supabase/migrations/0002_reservas.sql` (funciones para reservar)
+   - `supabase/seed_barberos.sql` (dos barberos de ejemplo)
 4. Arranca la app:
    ```bash
    npm run dev
@@ -32,6 +34,10 @@ Hecha con **Next.js** (pantallas y lógica), **Supabase** (base de datos y login
 |---|---|
 | `src/app/` | Las pantallas. Cada carpeta es una dirección de la app (`page.tsx` es la página). |
 | `src/app/page.tsx` | La página de inicio con los servicios y precios. |
+| `src/app/reservar/` | La reserva de citas en 4 pasos. |
+| `src/app/cita/[codigo]/` | La página de cada cita, para verla o cancelarla. |
+| `src/lib/formato.ts` | Precios en pesos y horas de Bogotá. |
+| `docs/` | Explicaciones de cada etapa para aprender. |
 | `src/lib/supabase/` | La conexión con Supabase, una para el navegador y otra para el servidor. |
 | `supabase/migrations/` | El SQL que crea la base de datos: tablas, reglas automáticas y permisos. |
 | `supabase/seed.sql` | Datos de ejemplo para probar. |
@@ -41,8 +47,8 @@ Hecha con **Next.js** (pantallas y lógica), **Supabase** (base de datos y login
 
 - [x] 0. Preparar el proyecto
 - [x] 1. Base de datos
-- [ ] 2. Páginas públicas
-- [ ] 3. Reservar cita
+- [x] 2. Páginas públicas
+- [x] 3. Reservar cita
 - [ ] 4. Login y roles
 - [ ] 5. Agenda
 - [ ] 6. Ventas y productos
