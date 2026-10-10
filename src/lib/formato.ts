@@ -57,3 +57,10 @@ export function partesDeFecha(fecha: string) {
     mes: d.toLocaleDateString("es-CO", { ...opciones, month: "short" }),
   };
 }
+
+// Enlace para abrir un chat de WhatsApp. Si el número tiene 10 dígitos
+// (celular de Colombia), le agrega el indicativo 57.
+export function enlaceWhatsApp(telefono: string) {
+  const digitos = telefono.replace(/\D/g, "");
+  return `https://wa.me/${digitos.length === 10 ? `57${digitos}` : digitos}`;
+}
