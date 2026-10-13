@@ -34,8 +34,10 @@ export default async function LayoutPanel({ children }: { children: React.ReactN
           <p className="font-semibold">{perfil.nombre}</p>
           <p className="text-xs opacity-70">{esDueno ? "Dueño" : "Barbero"}</p>
         </div>
-        <nav className="flex items-center gap-4 text-sm">
+        <nav className="flex flex-wrap items-center gap-4 text-sm">
           <Link href="/panel">Agenda</Link>
+          <Link href="/panel/ventas">Ventas</Link>
+          <Link href="/panel/productos">Productos</Link>
           {esDueno && <Link href="/panel/barberos">Barberos</Link>}
           <form action={cerrarSesion}>
             <button className="opacity-70">Salir</button>
