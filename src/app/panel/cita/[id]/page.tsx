@@ -69,7 +69,7 @@ export default async function PaginaCitaEquipo({
   const fechaNueva = confirmada && esFecha(parametros.fecha) ? parametros.fecha! : null;
   const barberoNuevo = (esDueno && parametros.barbero) || cita.estilistas.id;
 
-  const [{ data: horas }, { data: barberos }] = await Promise.all([
+  const [{ data: horas }, { data: barberos }, { data: venta }] = await Promise.all([
     fechaNueva
       ? supabase.rpc("horas_libres_equipo", {
           p_servicio: cita.servicios.id,
@@ -80,6 +80,10 @@ export default async function PaginaCitaEquipo({
       : Promise.resolve({ data: null }),
     esDueno && fechaNueva
       ? supabase.from("estilistas").select("id, nombre").eq("activo", true).order("nombre")
+      : Promise.resolve({ data: null }),
+    // Si ya se atendió, su venta (para poder abrirla).
+    cita.estado === "atendida"
+      ? supabase.from("ventas").select("id").eq("cita_id", cita.id).maybeSingle()
       : Promise.resolve({ data: null }),
   ]);
 
@@ -161,7 +165,17 @@ export default async function PaginaCitaEquipo({
         </div>
       )}
 
-      {/* Deshacer por si se tocó por error (la venta queda registrada; se maneja en la etapa 6) */}
+      {/* Atendida: la venta se creó sola. Desde ahí se agregan productos o se anula. */}
+      {venta && (
+        <Link
+          href={`/panel/ventas/${venta.id}`}
+          className="mt-4 inline-block rounded-xl border border-black/15 px-4 py-3 text-sm font-semibold dark:border-white/20"
+        >
+          Ver venta · agregar productos
+        </Link>
+      )}
+
+      {/* Deshacer por si se tocó por error */}
       {cita.estado === "no_vino" && (
         <form action={marcarEstado.bind(null, cita.id, "confirmada")} className="mt-4">
           <button className={estiloBoton}>Deshacer &quot;No vino&quot;</button>
