@@ -74,3 +74,8 @@ export function enlaceWhatsAppConMensaje(telefono: string, mensaje: string) {
 export function fechaEnBogota(fecha: string | Date) {
   return new Date(fecha).toLocaleDateString("en-CA", { timeZone: ZONA_HORARIA });
 }
+
+// Enlace para compartir un texto por WhatsApp: la persona elige a quién enviarlo.
+export function enlaceCompartirWhatsApp(texto: string) {
+  return `https://wa.me/?text=${encodeURIComponent(texto)}`;
+}

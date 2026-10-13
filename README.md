@@ -25,6 +25,7 @@ Hecha con **Next.js** (pantallas y lógica), **Supabase** (base de datos y login
    - `supabase/conectar_dueno.sql` (conecta la cuenta del dueño; ver `docs/aprende-etapa-4.md`)
    - `supabase/migrations/0003_agenda.sql` (horas libres para cambiar citas)
    - `supabase/migrations/0004_ventas.sql` (registrar y anular ventas, inventario)
+   - `supabase/migrations/0005_reportes.sql` (sumas para los reportes)
 4. Arranca la app:
    ```bash
    npm run dev
@@ -40,8 +41,9 @@ Hecha con **Next.js** (pantallas y lógica), **Supabase** (base de datos y login
 | `src/app/reservar/` | La reserva de citas en 4 pasos. |
 | `src/app/cita/[codigo]/` | La página de cada cita, para verla o cancelarla. |
 | `src/app/ingresar/` | El login del equipo. |
-| `src/app/panel/` | El panel del dueño y los barberos: agenda, citas, ventas, productos y barberos. |
+| `src/app/panel/` | El panel del dueño y los barberos: agenda, citas, ventas, productos, reportes y barberos. |
 | `src/lib/ventas.ts` | Sumas de ventas por día, por barbero y por forma de pago. |
+| `src/lib/periodos.ts` y `src/lib/reportes.ts` | Periodos (día, semana, mes) y el cálculo de la comisión. |
 | `src/lib/estados.ts` | Nombres y colores de los estados de una cita. |
 | `src/middleware.ts` | Protege el panel: sin sesión manda a `/ingresar`. |
 | `src/lib/sesion.ts` | Quién está conectado y si es dueño. |
@@ -61,6 +63,6 @@ Hecha con **Next.js** (pantallas y lógica), **Supabase** (base de datos y login
 - [x] 4. Login y roles
 - [x] 5. Agenda
 - [x] 6. Ventas y productos
-- [ ] 7. Reportes y comisión
+- [x] 7. Reportes y comisión
 - [ ] 8. WhatsApp
 - [ ] 9. Lanzar

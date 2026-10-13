@@ -38,6 +38,7 @@ export default async function LayoutPanel({ children }: { children: React.ReactN
           <Link href="/panel">Agenda</Link>
           <Link href="/panel/ventas">Ventas</Link>
           <Link href="/panel/productos">Productos</Link>
+          {esDueno && <Link href="/panel/reportes">Reportes</Link>}
           {esDueno && <Link href="/panel/barberos">Barberos</Link>}
           <form action={cerrarSesion}>
             <button className="opacity-70">Salir</button>
