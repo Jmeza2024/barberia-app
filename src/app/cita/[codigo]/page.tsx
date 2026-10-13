@@ -4,6 +4,7 @@ import Link from "next/link";
 import { crearClienteServidor } from "@/lib/supabase/server";
 import { formatoFechaLarga, formatoHora, formatoPesos } from "@/lib/formato";
 import { cancelarCita } from "./acciones";
+import { nombreEstado, type EstadoCita } from "@/lib/estados";
 
 export const dynamic = "force-dynamic";
 
@@ -14,14 +15,7 @@ type Cita = {
   cliente: string;
   inicio: string;
   fin: string;
-  estado: "confirmada" | "atendida" | "cancelada" | "no_vino";
-};
-
-const textoEstado: Record<Cita["estado"], string> = {
-  confirmada: "Confirmada",
-  atendida: "Atendida",
-  cancelada: "Cancelada",
-  no_vino: "No asistió",
+  estado: EstadoCita;
 };
 
 export default async function PaginaCita({
@@ -60,7 +54,7 @@ export default async function PaginaCita({
       <p className="mt-1 text-sm opacity-70">Guarda este enlace para ver o cancelar tu cita.</p>
 
       <div className="mt-6 space-y-1 rounded-xl border border-black/10 p-4 dark:border-white/15">
-        <p className="text-sm font-semibold">{textoEstado[cita.estado]}</p>
+        <p className="text-sm font-semibold">{nombreEstado[cita.estado]}</p>
         <p className="text-lg font-semibold">{cita.servicio}</p>
         <p>con {cita.estilista}</p>
         <p>
