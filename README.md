@@ -23,6 +23,7 @@ Hecha con **Next.js** (pantallas y lógica), **Supabase** (base de datos y login
    - `supabase/migrations/0002_reservas.sql` (funciones para reservar)
    - `supabase/seed_barberos.sql` (dos barberos de ejemplo)
    - `supabase/conectar_dueno.sql` (conecta la cuenta del dueño; ver `docs/aprende-etapa-4.md`)
+   - `supabase/migrations/0003_agenda.sql` (horas libres para cambiar citas)
 4. Arranca la app:
    ```bash
    npm run dev
@@ -38,7 +39,8 @@ Hecha con **Next.js** (pantallas y lógica), **Supabase** (base de datos y login
 | `src/app/reservar/` | La reserva de citas en 4 pasos. |
 | `src/app/cita/[codigo]/` | La página de cada cita, para verla o cancelarla. |
 | `src/app/ingresar/` | El login del equipo. |
-| `src/app/panel/` | El panel del dueño y los barberos (citas de hoy, barberos). |
+| `src/app/panel/` | El panel del dueño y los barberos: agenda, detalle de cada cita, nueva cita y barberos. |
+| `src/lib/estados.ts` | Nombres y colores de los estados de una cita. |
 | `src/middleware.ts` | Protege el panel: sin sesión manda a `/ingresar`. |
 | `src/lib/sesion.ts` | Quién está conectado y si es dueño. |
 | `src/lib/formato.ts` | Precios en pesos y horas de Bogotá. |
@@ -55,7 +57,7 @@ Hecha con **Next.js** (pantallas y lógica), **Supabase** (base de datos y login
 - [x] 2. Páginas públicas
 - [x] 3. Reservar cita
 - [x] 4. Login y roles
-- [ ] 5. Agenda
+- [x] 5. Agenda
 - [ ] 6. Ventas y productos
 - [ ] 7. Reportes y comisión
 - [ ] 8. WhatsApp

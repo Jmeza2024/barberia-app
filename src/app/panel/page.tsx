@@ -1,64 +1,160 @@
-// Página /panel: las citas de hoy. Gracias a las reglas de seguridad (RLS),
+// Página /panel: la agenda de un día. Gracias a las reglas de seguridad (RLS),
 // la misma consulta le trae al barbero solo sus citas y al dueño todas.
+//
+// El día y el barbero elegidos viajan en la dirección (searchParams), por
+// ejemplo /panel?fecha=2026-10-12&barbero=abc. Así los botones de "día
+// anterior" y "día siguiente" son simples enlaces.
+import Link from "next/link";
 import { obtenerPerfil } from "@/lib/sesion";
-import { enlaceWhatsApp, formatoHora, hoyEnBogota, sumarDias } from "@/lib/formato";
+import {
+  enlaceWhatsApp,
+  formatoFechaLarga,
+  formatoHora,
+  hoyEnBogota,
+  sumarDias,
+} from "@/lib/formato";
+import { colorEstado, nombreEstado, type EstadoCita } from "@/lib/estados";
 
-type CitaHoy = {
+type CitaAgenda = {
   id: string;
   inicio: string;
-  estado: string;
+  fin: string;
+  estado: EstadoCita;
+  nota: string | null;
   servicios: { nombre: string } | null;
   clientes: { nombre: string; telefono: string } | null;
-  estilistas: { nombre: string } | null;
+  estilistas: { id: string; nombre: string } | null;
 };
 
-export default async function PanelHoy() {
+const esFecha = (texto?: string) => !!texto && /^\d{4}-\d{2}-\d{2}$/.test(texto);
+
+export default async function PanelAgenda({
+  searchParams,
+}: {
+  searchParams: Promise<{ fecha?: string; barbero?: string }>;
+}) {
+  const parametros = await searchParams;
   const { supabase, perfil } = await obtenerPerfil();
+  const esDueno = perfil?.rol === "dueno";
   const hoy = hoyEnBogota();
+  const fecha = esFecha(parametros.fecha) ? parametros.fecha! : hoy;
+  const barbero = esDueno ? parametros.barbero : undefined;
 
   // Bogotá está en UTC-5 todo el año (no cambia de hora).
-  const { data: citas } = await supabase
+  let consulta = supabase
     .from("citas")
-    .select("id, inicio, estado, servicios(nombre), clientes(nombre, telefono), estilistas(nombre)")
-    .gte("inicio", `${hoy}T00:00:00-05:00`)
-    .lt("inicio", `${sumarDias(hoy, 1)}T00:00:00-05:00`)
-    .neq("estado", "cancelada")
-    .order("inicio")
-    .returns<CitaHoy[]>();
+    .select(
+      "id, inicio, fin, estado, nota, servicios(nombre), clientes(nombre, telefono), estilistas(id, nombre)",
+    )
+    .gte("inicio", `${fecha}T00:00:00-05:00`)
+    .lt("inicio", `${sumarDias(fecha, 1)}T00:00:00-05:00`)
+    .order("inicio");
+  if (barbero) consulta = consulta.eq("estilista_id", barbero);
+
+  const [{ data: citas }, { data: barberos }] = await Promise.all([
+    consulta.returns<CitaAgenda[]>(),
+    esDueno
+      ? supabase.from("estilistas").select("id, nombre").eq("activo", true).order("nombre")
+      : Promise.resolve({ data: null }),
+  ]);
+
+  const activas = citas?.filter((c) => c.estado !== "cancelada") ?? [];
+  const canceladas = citas?.filter((c) => c.estado === "cancelada") ?? [];
+
+  // Arma un enlace a la misma página cambiando solo el día.
+  const enlaceDia = (dia: string) =>
+    `/panel?fecha=${dia}${barbero ? `&barbero=${barbero}` : ""}`;
 
   return (
     <section>
-      <h1 className="text-2xl font-bold">Hola, {perfil?.nombre.split(" ")[0]}</h1>
-      <p className="mt-1 text-sm opacity-70">
-        {citas?.length ? `Hoy hay ${citas.length} cita(s).` : "Hoy no hay citas."}
-      </p>
+      <div className="flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <h1 className="text-2xl font-bold">
+            {fecha === hoy ? "Hoy" : formatoFechaLarga(`${fecha}T12:00:00-05:00`)}
+          </h1>
+          <p className="mt-1 text-sm opacity-70">
+            {activas.length ? `${activas.length} cita(s)` : "No hay citas"}
+          </p>
+        </div>
+        <Link
+          href={`/panel/nueva-cita?fecha=${fecha}`}
+          className="rounded-xl bg-black px-4 py-3 text-sm font-semibold text-white dark:bg-white dark:text-black"
+        >
+          + Nueva cita
+        </Link>
+      </div>
+
+      {/* Cambiar de día */}
+      <nav className="mt-4 flex items-center gap-2 text-sm">
+        <Link href={enlaceDia(sumarDias(fecha, -1))} className="rounded-lg border border-black/15 px-3 py-2 dark:border-white/20">
+          ← Anterior
+        </Link>
+        {fecha !== hoy && (
+          <Link href={enlaceDia(hoy)} className="rounded-lg border border-black/15 px-3 py-2 dark:border-white/20">
+            Hoy
+          </Link>
+        )}
+        <Link href={enlaceDia(sumarDias(fecha, 1))} className="rounded-lg border border-black/15 px-3 py-2 dark:border-white/20">
+          Siguiente →
+        </Link>
+      </nav>
+
+      {/* Solo el dueño: ver la agenda de un barbero. Es un formulario GET:
+          al enviarlo, los campos se vuelven parte de la dirección. */}
+      {esDueno && barberos && (
+        <form className="mt-3 flex items-center gap-2 text-sm">
+          <input type="hidden" name="fecha" value={fecha} />
+          <select
+            name="barbero"
+            defaultValue={barbero ?? ""}
+            className="rounded-lg border border-black/15 bg-transparent px-3 py-2 dark:border-white/20"
+          >
+            <option value="">Todos los barberos</option>
+            {barberos.map((b) => (
+              <option key={b.id} value={b.id}>
+                {b.nombre}
+              </option>
+            ))}
+          </select>
+          <button className="rounded-lg border border-black/15 px-3 py-2 dark:border-white/20">Ver</button>
+        </form>
+      )}
 
       <ul className="mt-6 space-y-2">
-        {citas?.map((cita) => (
-          <li
-            key={cita.id}
-            className="flex items-center justify-between gap-3 rounded-xl border border-black/10 p-4 dark:border-white/15"
-          >
-            <div>
-              <p className="font-semibold">{formatoHora(cita.inicio)}</p>
-              <p className="text-sm">
-                {cita.clientes?.nombre} · {cita.servicios?.nombre}
-              </p>
-              {perfil?.rol === "dueno" && (
-                <p className="text-xs opacity-70">con {cita.estilistas?.nombre}</p>
-              )}
+        {[...activas, ...canceladas].map((cita) => (
+          <li key={cita.id}>
+            <div
+              className={`flex items-start justify-between gap-3 rounded-xl border border-black/10 p-4 dark:border-white/15 ${
+                cita.estado === "cancelada" ? "opacity-50" : ""
+              }`}
+            >
+              <Link href={`/panel/cita/${cita.id}`} className="flex-1">
+                <p className="font-semibold">
+                  {formatoHora(cita.inicio)} – {formatoHora(cita.fin)}
+                </p>
+                <p className="text-sm">
+                  {cita.clientes?.nombre} · {cita.servicios?.nombre}
+                </p>
+                {esDueno && <p className="text-xs opacity-70">con {cita.estilistas?.nombre}</p>}
+                {cita.nota && <p className="mt-1 text-xs italic opacity-70">“{cita.nota}”</p>}
+              </Link>
+              <div className="flex flex-col items-end gap-2">
+                <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${colorEstado[cita.estado]}`}>
+                  {nombreEstado[cita.estado]}
+                </span>
+                {cita.clientes && (
+                  <a href={enlaceWhatsApp(cita.clientes.telefono)} className="text-xs underline">
+                    WhatsApp
+                  </a>
+                )}
+              </div>
             </div>
-            {cita.clientes && (
-              <a href={enlaceWhatsApp(cita.clientes.telefono)} className="text-sm underline">
-                WhatsApp
-              </a>
-            )}
           </li>
         ))}
       </ul>
-      <p className="mt-6 text-xs opacity-60">
-        En la etapa 5 aquí podrás cancelar, cambiar y marcar las citas como atendidas.
-      </p>
+      {!!citas?.length && (
+        <p className="mt-4 text-xs opacity-60">Toca una cita para atenderla, cambiarla o cancelarla.</p>
+      )}
     </section>
   );
 }

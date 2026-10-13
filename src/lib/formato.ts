@@ -64,3 +64,13 @@ export function enlaceWhatsApp(telefono: string) {
   const digitos = telefono.replace(/\D/g, "");
   return `https://wa.me/${digitos.length === 10 ? `57${digitos}` : digitos}`;
 }
+
+// Enlace de WhatsApp con un mensaje ya escrito, listo para enviar.
+export function enlaceWhatsAppConMensaje(telefono: string, mensaje: string) {
+  return `${enlaceWhatsApp(telefono)}?text=${encodeURIComponent(mensaje)}`;
+}
+
+// "2026-10-13T00:30:00Z" -> "2026-10-12" (el día en Bogotá, no en UTC).
+export function fechaEnBogota(fecha: string | Date) {
+  return new Date(fecha).toLocaleDateString("en-CA", { timeZone: ZONA_HORARIA });
+}
