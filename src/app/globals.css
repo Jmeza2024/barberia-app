@@ -100,3 +100,13 @@ h1 {
   background-clip: text;
   color: transparent;
 }
+
+/*
+  Páginas de clientes (las que tienen la foto de fondo): los cuadros son
+  transparentes, como marca de agua. Solo se ve el borde y la foto pasa por detrás.
+  Funciona cambiando los colores "tarjeta" y "borde" solo dentro de .publico.
+*/
+.publico {
+  --color-tarjeta: rgb(255 255 255 / 0.03);
+  --color-borde: rgb(255 255 255 / 0.22);
+}

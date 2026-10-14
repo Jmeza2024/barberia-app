@@ -46,7 +46,7 @@ export default async function Inicio() {
     "flex items-center justify-center gap-2 rounded-xl border border-zinc-600/60 bg-black/30 py-3 text-sm backdrop-blur";
 
   return (
-    <main className="pb-12">
+    <main className="publico pb-12">
       <FondoFoto />
       {/* Portada: ocupa casi toda la pantalla, con rayos de luz de fondo */}
       <header className="relative overflow-hidden">

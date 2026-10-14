@@ -44,7 +44,7 @@ También hay tres clases propias, creadas con `@utility`:
 e ingreso) tienen de fondo la foto de la barbería: `public/fondo-barberia.jpg`.
 La pone el componente `src/components/FondoFoto.tsx` con `position: fixed`,
 así la foto se queda quieta y el contenido pasa por encima al bajar.
-Encima lleva una capa negra (`from-black/55 ... to-black/85`) para que el texto se lea.
+La foto va a todo color, con una capa negra encima (`from-black/45 ... to-black/80`) para que el texto se lea. Los cuadros de estas páginas son transparentes, solo con el borde, como marca de agua: lo hace la clase `.publico` en `globals.css`.
 
 Para cambiar la foto, reemplaza `public/fondo-barberia.jpg` por otra con el mismo
 nombre. Mientras más grande sea (por ejemplo, 1500 px de ancho), más nítida se verá

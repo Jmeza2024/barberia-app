@@ -32,7 +32,7 @@ export default async function PaginaCita({
 
   if (!cita) {
     return (
-      <main className="mx-auto max-w-md px-4 py-10">
+      <main className="publico mx-auto max-w-md px-4 py-10">
         <FondoFoto />
         <h1 className="text-2xl font-bold">No encontramos esta cita</h1>
         <Link href="/" className="mt-4 inline-block underline">
@@ -45,7 +45,7 @@ export default async function PaginaCita({
   const sePuedeCancelar = cita.estado === "confirmada" && new Date(cita.inicio) > new Date();
 
   return (
-    <main className="mx-auto max-w-md px-4 py-10">
+    <main className="publico mx-auto max-w-md px-4 py-10">
       <FondoFoto />
       {cita.estado === "confirmada" && (
         <span className="flex h-14 w-14 items-center justify-center rounded-full bg-white text-black">

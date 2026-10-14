@@ -24,7 +24,7 @@ export default async function PaginaReservar() {
   ]);
 
   return (
-    <main className="mx-auto max-w-md px-4 py-6">
+    <main className="publico mx-auto max-w-md px-4 py-6">
       <FondoFoto />
       <Link href="/" className="flex items-center gap-1 text-sm text-suave">
         <ChevronLeft size={16} />
