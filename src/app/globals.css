@@ -1,26 +1,47 @@
 @import "tailwindcss";
 
+/*
+  Colores de la barbería: negro, gris y blanco (lo que pidió el dueño).
+  Se definen una sola vez aquí y Tailwind crea las clases solas:
+  bg-fondo, bg-tarjeta, border-borde, text-suave, etc.
+  Si algún día quieren otro tono, se cambia solo en este archivo.
+*/
+@theme {
+  --color-fondo: #0b0b0c; /* fondo de toda la app */
+  --color-tarjeta: #18181b; /* tarjetas: servicios, citas, ventas */
+  --color-borde: #2e2e33; /* líneas y bordes */
+  --color-suave: #a1a1aa; /* texto secundario: duración, "con Carlos" */
+  --color-texto: #f4f4f5; /* texto principal y precios */
+  --color-boton: #27272a; /* botones secundarios */
+
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+  --font-titulo: var(--font-oswald), var(--font-inter), sans-serif;
+}
+
+/* La app siempre en oscuro, para que todos la vean igual. */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  color-scheme: dark;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-sans), Arial, sans-serif;
+  background: var(--color-fondo);
+  color: var(--color-texto);
+  font-family: var(--font-sans);
+}
+
+/* Los títulos usan Oswald: alta y fuerte, como letrero de barbería. */
+h1,
+h2 {
+  font-family: var(--font-titulo);
+  letter-spacing: 0.01em;
+}
+
+/* Los campos de formulario sobre el fondo oscuro. */
+input,
+select {
+  background-color: var(--color-tarjeta);
+}
+input::placeholder {
+  color: var(--color-suave);
+  opacity: 0.7;
 }

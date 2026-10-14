@@ -29,12 +29,12 @@ export default async function PaginaBarberos() {
           {barberos?.map((b) => (
             <li
               key={b.id}
-              className={`rounded-xl border border-black/10 p-4 dark:border-white/15 ${b.activo ? "" : "opacity-50"}`}
+              className={`rounded-xl border border-borde bg-tarjeta p-4 ${b.activo ? "" : "opacity-50"}`}
             >
               <div className="flex items-center justify-between gap-2">
                 <div>
                   <p className="font-semibold">{b.nombre}</p>
-                  <p className="text-xs opacity-70">
+                  <p className="text-xs text-suave">
                     {b.rol === "dueno" ? "Dueño" : "Barbero"}
                     {b.activo ? "" : " · desactivado"}
                   </p>
@@ -60,10 +60,10 @@ export default async function PaginaBarberos() {
                   max={100}
                   step="0.5"
                   defaultValue={b.porcentaje_comision}
-                  className="w-20 rounded-lg border border-black/20 bg-transparent p-2 dark:border-white/25"
+                  className="w-20 rounded-lg border border-borde bg-transparent p-2"
                 />
                 <span>%</span>
-                <button className="rounded-lg border border-black/20 px-3 py-2 dark:border-white/25">
+                <button className="rounded-lg border border-borde px-3 py-2">
                   Guardar
                 </button>
               </form>

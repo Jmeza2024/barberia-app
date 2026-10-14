@@ -16,7 +16,7 @@ import {
 } from "@/lib/ventas";
 
 const esFecha = (texto?: string) => !!texto && /^\d{4}-\d{2}-\d{2}$/.test(texto);
-const estiloBotonDia = "rounded-lg border border-black/15 px-3 py-2 dark:border-white/20";
+const estiloBotonDia = "rounded-lg border border-borde bg-tarjeta px-3 py-2";
 
 export default async function PaginaVentas({
   searchParams,
@@ -49,11 +49,11 @@ export default async function PaginaVentas({
           <h1 className="text-2xl font-bold">
             Ventas {fecha === hoy ? "de hoy" : `del ${formatoFechaLarga(`${fecha}T12:00:00-05:00`).toLowerCase()}`}
           </h1>
-          <p className="mt-1 text-sm opacity-70">{esDueno ? "Todo el equipo" : "Tus ventas"}</p>
+          <p className="mt-1 text-sm text-suave">{esDueno ? "Todo el equipo" : "Tus ventas"}</p>
         </div>
         <Link
           href="/panel/ventas/nueva"
-          className="rounded-xl bg-black px-4 py-3 text-sm font-semibold text-white dark:bg-white dark:text-black"
+          className="rounded-xl bg-white px-4 py-3 text-sm font-semibold text-black"
         >
           + Registrar venta
         </Link>
@@ -84,7 +84,7 @@ export default async function PaginaVentas({
       </div>
 
       {ventas.length > 0 && (
-        <p className="mt-3 text-sm opacity-70">
+        <p className="mt-3 text-sm text-suave">
           {(Object.keys(porFormaPago) as FormaPago[])
             .filter((forma) => porFormaPago[forma] > 0)
             .map((forma) => `${nombreFormaPago[forma]} ${formatoPesos(porFormaPago[forma])}`)
@@ -97,7 +97,7 @@ export default async function PaginaVentas({
         <div className="mt-6 overflow-x-auto">
           <h2 className="font-semibold">Por barbero</h2>
           <table className="mt-2 w-full text-sm">
-            <thead className="text-left opacity-70">
+            <thead className="text-left text-suave">
               <tr>
                 <th className="py-1 font-normal">Barbero</th>
                 <th className="py-1 text-right font-normal">Cortes</th>
@@ -108,7 +108,7 @@ export default async function PaginaVentas({
             </thead>
             <tbody>
               {porBarbero.map((b) => (
-                <tr key={b.id} className="border-t border-black/10 dark:border-white/15">
+                <tr key={b.id} className="border-t border-borde">
                   <td className="py-2">{b.nombre}</td>
                   <td className="py-2 text-right">{b.cortes}</td>
                   <td className="py-2 text-right">{formatoPesos(b.servicios)}</td>
@@ -124,7 +124,7 @@ export default async function PaginaVentas({
       {/* Cada venta */}
       <h2 className="mt-6 font-semibold">Ventas ({ventas.length})</h2>
       {ventas.length === 0 ? (
-        <p className="mt-2 text-sm opacity-70">
+        <p className="mt-2 text-sm text-suave">
           No hay ventas este día. Se registran solas al marcar una cita como Atendida.
         </p>
       ) : (
@@ -133,11 +133,11 @@ export default async function PaginaVentas({
             <li key={venta.id}>
               <Link
                 href={`/panel/ventas/${venta.id}`}
-                className="flex items-start justify-between gap-3 rounded-xl border border-black/10 p-4 dark:border-white/15"
+                className="flex items-start justify-between gap-3 rounded-xl border border-borde bg-tarjeta p-4"
               >
                 <div>
                   <p className="font-semibold">{describirLineas(venta.detalle_venta)}</p>
-                  <p className="text-xs opacity-70">
+                  <p className="text-xs text-suave">
                     {formatoHora(venta.fecha_hora)}
                     {esDueno && ` · ${venta.estilistas?.nombre}`}
                     {venta.clientes && ` · ${venta.clientes.nombre}`}
@@ -159,11 +159,11 @@ function Cifra({ titulo, valor, resaltar }: { titulo: string; valor: string; res
     <div
       className={`rounded-xl p-3 ${
         resaltar
-          ? "bg-black text-white dark:bg-white dark:text-black"
-          : "border border-black/10 dark:border-white/15"
+          ? "bg-white text-black"
+          : "border border-borde bg-tarjeta"
       }`}
     >
-      <p className="text-xs opacity-70">{titulo}</p>
+      <p className="text-xs text-suave">{titulo}</p>
       <p className="text-lg font-bold">{valor}</p>
     </div>
   );

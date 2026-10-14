@@ -7,7 +7,7 @@ import { useActionState } from "react";
 import { iniciarSesion, type EstadoIngreso } from "./acciones";
 
 const estiloCampo =
-  "w-full rounded-lg border border-black/20 bg-transparent p-3 dark:border-white/25";
+  "w-full rounded-lg border border-borde bg-transparent p-3";
 
 const inicial: EstadoIngreso = { error: null, correo: "" };
 
@@ -17,7 +17,7 @@ export default function FormularioIngreso() {
   return (
     <form action={accion} className="mt-6 space-y-3">
       {estado.error && (
-        <p className="rounded-lg bg-red-100 p-3 text-sm text-red-800">{estado.error}</p>
+        <p className="rounded-lg bg-red-950/60 p-3 text-sm text-red-200">{estado.error}</p>
       )}
       <input
         name="correo"
@@ -37,7 +37,7 @@ export default function FormularioIngreso() {
       />
       <button
         disabled={cargando}
-        className="w-full rounded-xl bg-black py-4 font-semibold text-white disabled:opacity-50 dark:bg-white dark:text-black"
+        className="w-full rounded-xl bg-white py-4 font-semibold text-black disabled:opacity-50"
       >
         {cargando ? "Entrando…" : "Entrar"}
       </button>

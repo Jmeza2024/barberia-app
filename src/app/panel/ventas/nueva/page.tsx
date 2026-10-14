@@ -26,7 +26,7 @@ export default async function PaginaNuevaVenta() {
         ← Volver a ventas
       </Link>
       <h1 className="mt-3 text-2xl font-bold">Registrar venta</h1>
-      <p className="mt-1 text-sm opacity-70">
+      <p className="mt-1 text-sm text-suave">
         Las citas atendidas se registran solas. Usa esto para quien llegó sin cita o solo compró un
         producto.
       </p>

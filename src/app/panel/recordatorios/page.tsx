@@ -16,7 +16,7 @@ import { direccionSitio } from "@/lib/sitio";
 import { abrirRecordatorio, marcarPendiente } from "./acciones";
 
 const esFecha = (texto?: string) => !!texto && /^\d{4}-\d{2}-\d{2}$/.test(texto);
-const estiloBotonDia = "rounded-lg border border-black/15 px-3 py-2 dark:border-white/20";
+const estiloBotonDia = "rounded-lg border border-borde px-3 py-2";
 
 export default async function PaginaRecordatorios({
   searchParams,
@@ -36,7 +36,7 @@ export default async function PaginaRecordatorios({
   return (
     <section className="max-w-xl">
       <h1 className="text-2xl font-bold">Recordatorios</h1>
-      <p className="mt-1 text-sm opacity-70">
+      <p className="mt-1 text-sm text-suave">
         Citas de {fecha === manana ? "mañana, " : ""}
         {formatoFechaLarga(`${fecha}T12:00:00-05:00`).toLowerCase()} · {pendientes.length} por enviar
       </p>
@@ -55,13 +55,13 @@ export default async function PaginaRecordatorios({
         </Link>
       </nav>
 
-      <p className="mt-4 text-sm opacity-70">
+      <p className="mt-4 text-sm text-suave">
         Toca <strong>Enviar</strong> en cada cita: se abre WhatsApp con el mensaje listo y la cita queda
         marcada como recordada.
       </p>
 
       {citas.length === 0 ? (
-        <p className="mt-6 text-sm opacity-70">No hay citas confirmadas ese día.</p>
+        <p className="mt-6 text-sm text-suave">No hay citas confirmadas ese día.</p>
       ) : (
         <ul className="mt-6 space-y-2">
           {citas.map((cita) => {
@@ -71,26 +71,26 @@ export default async function PaginaRecordatorios({
             return (
               <li
                 key={cita.id}
-                className="flex items-center justify-between gap-3 rounded-xl border border-black/10 p-4 dark:border-white/15"
+                className="flex items-center justify-between gap-3 rounded-xl border border-borde bg-tarjeta p-4"
               >
                 <div>
                   <p className="font-semibold">
                     {formatoHora(cita.inicio)} · {cita.clientes?.nombre}
                   </p>
-                  <p className="text-sm opacity-70">
+                  <p className="text-sm text-suave">
                     {cita.servicios?.nombre}
                     {esDueno && ` · ${cita.estilistas?.nombre}`}
                   </p>
                 </div>
                 {cita.recordatorio_enviado ? (
                   <form action={marcarPendiente.bind(null, cita.id, fecha)} className="text-right">
-                    <p className="text-sm font-semibold text-green-700">✓ Enviado</p>
-                    <button className="text-xs underline opacity-70">Marcar pendiente</button>
+                    <p className="text-sm font-semibold text-emerald-400">✓ Enviado</p>
+                    <button className="text-xs underline text-suave">Marcar pendiente</button>
                   </form>
                 ) : (
                   enlace && (
                     <form action={abrirRecordatorio.bind(null, cita.id, enlace)}>
-                      <button className="rounded-lg bg-green-700 px-4 py-2 text-sm font-semibold text-white">
+                      <button className="rounded-lg bg-emerald-700 px-4 py-2 text-sm font-semibold text-white">
                         Enviar
                       </button>
                     </form>

@@ -1,6 +1,7 @@
 // Página /cita/[codigo]. Los corchetes significan que esa parte de la
 // dirección cambia: /cita/abc123 muestra la cita con código "abc123".
 import Link from "next/link";
+import { CalendarDays, Check, Scissors, User } from "lucide-react";
 import { crearClienteServidor } from "@/lib/supabase/server";
 import { formatoFechaLarga, formatoHora, formatoPesos } from "@/lib/formato";
 import { cancelarCita } from "./acciones";
@@ -44,35 +45,46 @@ export default async function PaginaCita({
   return (
     <main className="mx-auto max-w-md px-4 py-10">
       {cita.estado === "confirmada" && (
-        <p className="text-4xl" aria-hidden>
-          ✅
-        </p>
+        <span className="flex h-14 w-14 items-center justify-center rounded-full bg-white text-black">
+          <Check size={30} strokeWidth={3} />
+        </span>
       )}
-      <h1 className="mt-2 text-2xl font-bold">
+      <h1 className="mt-4 text-3xl font-bold uppercase">
         {cita.estado === "confirmada" ? `¡Listo, ${cita.cliente}!` : "Tu cita"}
       </h1>
-      <p className="mt-1 text-sm opacity-70">Guarda este enlace para ver o cancelar tu cita.</p>
+      <p className="mt-1 text-sm text-suave">Guarda este enlace para ver o cancelar tu cita.</p>
 
-      <div className="mt-6 space-y-1 rounded-xl border border-black/10 p-4 dark:border-white/15">
-        <p className="text-sm font-semibold">{nombreEstado[cita.estado]}</p>
-        <p className="text-lg font-semibold">{cita.servicio}</p>
-        <p>con {cita.estilista}</p>
-        <p>
+      <div className="mt-6 space-y-2 rounded-xl border border-borde bg-tarjeta p-4">
+        <p className="text-xs font-semibold tracking-widest text-suave uppercase">
+          {nombreEstado[cita.estado]}
+        </p>
+        <p className="flex items-center justify-between text-lg font-semibold">
+          <span className="flex items-center gap-2">
+            <Scissors size={18} className="text-suave" />
+            {cita.servicio}
+          </span>
+          {formatoPesos(cita.precio)}
+        </p>
+        <p className="flex items-center gap-2">
+          <User size={18} className="text-suave" />
+          con {cita.estilista}
+        </p>
+        <p className="flex items-center gap-2">
+          <CalendarDays size={18} className="text-suave" />
           {formatoFechaLarga(cita.inicio)}, {formatoHora(cita.inicio)}
         </p>
-        <p>{formatoPesos(cita.precio)}</p>
       </div>
 
       {sePuedeCancelar && (
         // .bind() le pasa el código a la acción cuando se presiona el botón.
         <form action={cancelarCita.bind(null, codigo)} className="mt-6">
-          <button className="w-full rounded-xl border border-red-600 py-3 font-semibold text-red-600">
+          <button className="w-full rounded-xl border border-red-500/70 py-3 font-semibold text-red-400">
             Cancelar cita
           </button>
         </form>
       )}
 
-      <Link href="/" className="mt-6 inline-block underline">
+      <Link href="/" className="mt-6 inline-block text-sm text-suave underline">
         Volver al inicio
       </Link>
     </main>

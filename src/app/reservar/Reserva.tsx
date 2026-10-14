@@ -5,6 +5,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
+import { CalendarDays, ChevronLeft, Scissors, User } from "lucide-react";
 import { crearClienteNavegador } from "@/lib/supabase/client";
 import {
   formatoFechaLarga,
@@ -121,16 +122,24 @@ export default function Reserva({ servicios, estilistas, relacion, diasParaReser
 
   return (
     <div className="mt-4">
-      <p className="text-sm opacity-70">Paso {paso} de 4</p>
-
-      {paso > 1 && (
-        <button onClick={() => setPaso(paso - 1)} className="mt-2 text-sm underline">
-          ← Atrás
-        </button>
-      )}
+      {/* Barra de progreso: 4 rayitas, se llenan a medida que avanza. */}
+      <div className="flex items-center justify-between text-sm text-suave">
+        <span>Paso {paso} de 4</span>
+        {paso > 1 && (
+          <button onClick={() => setPaso(paso - 1)} className="flex items-center gap-1 text-texto">
+            <ChevronLeft size={16} />
+            Atrás
+          </button>
+        )}
+      </div>
+      <div className="mt-2 grid grid-cols-4 gap-1.5">
+        {[1, 2, 3, 4].map((n) => (
+          <span key={n} className={`h-1 rounded-full ${n <= paso ? "bg-white" : "bg-borde"}`} />
+        ))}
+      </div>
 
       {error && (
-        <p className="mt-4 rounded-lg bg-red-100 p-3 text-sm text-red-800">{error}</p>
+        <p className="mt-4 rounded-lg bg-red-950/60 p-3 text-sm text-red-200">{error}</p>
       )}
 
       {/* Paso 1: servicio */}
@@ -146,11 +155,14 @@ export default function Reserva({ servicios, estilistas, relacion, diasParaReser
                     setEstilistaId(CUALQUIERA);
                     setPaso(2);
                   }}
-                  className="flex w-full items-center justify-between rounded-xl border border-black/10 p-4 text-left dark:border-white/15"
+                  className="flex w-full items-center gap-3 rounded-xl border border-borde bg-tarjeta p-4 text-left"
                 >
-                  <span>
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-boton">
+                    <Scissors size={18} />
+                  </span>
+                  <span className="flex-1">
                     <span className="block font-medium">{s.nombre}</span>
-                    <span className="text-sm opacity-70">{s.duracion_min} min</span>
+                    <span className="text-sm text-suave">{s.duracion_min} min</span>
                   </span>
                   <span className="font-semibold">{formatoPesos(s.precio)}</span>
                 </button>
@@ -173,9 +185,9 @@ export default function Reserva({ servicios, estilistas, relacion, diasParaReser
                       setEstilistaId(e.id);
                       setPaso(3);
                     }}
-                    className="flex w-full items-center gap-3 rounded-xl border border-black/10 p-4 text-left dark:border-white/15"
+                    className="flex w-full items-center gap-3 rounded-xl border border-borde bg-tarjeta p-4 text-left"
                   >
-                    <span className="flex h-10 w-10 items-center justify-center rounded-full bg-black/10 font-semibold dark:bg-white/15">
+                    <span className="flex h-10 w-10 items-center justify-center rounded-full bg-boton font-semibold">
                       {e.id === CUALQUIERA ? "?" : e.nombre.charAt(0)}
                     </span>
                     <span className="font-medium">{e.nombre}</span>
@@ -202,11 +214,13 @@ export default function Reserva({ servicios, estilistas, relacion, diasParaReser
                   onClick={() => setFecha(d)}
                   className={`min-w-16 rounded-xl border p-2 text-center ${
                     elegido
-                      ? "border-black bg-black text-white dark:border-white dark:bg-white dark:text-black"
-                      : "border-black/10 dark:border-white/15"
+                      ? "border-white bg-white text-black"
+                      : "border-borde bg-tarjeta"
                   }`}
                 >
-                  <span className="block text-xs capitalize">{p.diaSemana}</span>
+                  <span className="block text-xs capitalize">
+                    {d === dias[0] ? "Hoy" : d === dias[1] ? "Mañana" : p.diaSemana}
+                  </span>
                   <span className="block text-lg font-semibold">{p.dia}</span>
                   <span className="block text-xs">{p.mes}</span>
                 </button>
@@ -216,9 +230,9 @@ export default function Reserva({ servicios, estilistas, relacion, diasParaReser
 
           <div className="mt-4">
             {cargandoHoras ? (
-              <p className="text-sm opacity-70">Buscando horas libres…</p>
+              <p className="text-sm text-suave">Buscando horas libres…</p>
             ) : horas.length === 0 ? (
-              <p className="text-sm opacity-70">No hay horas libres este día. Prueba otro.</p>
+              <p className="text-sm text-suave">No hay horas libres este día. Prueba otro.</p>
             ) : (
               <div className="grid grid-cols-3 gap-2">
                 {horas.map((h) => (
@@ -228,7 +242,7 @@ export default function Reserva({ servicios, estilistas, relacion, diasParaReser
                       setHora(h.inicio);
                       setPaso(4);
                     }}
-                    className="rounded-lg border border-black/10 py-3 text-sm font-medium dark:border-white/15"
+                    className="rounded-lg border border-borde bg-tarjeta py-3 text-sm font-medium hover:border-white"
                   >
                     {formatoHora(h.inicio)}
                   </button>
@@ -242,13 +256,22 @@ export default function Reserva({ servicios, estilistas, relacion, diasParaReser
       {/* Paso 4: datos y confirmación */}
       {paso === 4 && servicio && hora && (
         <section className="mt-4">
-          <div className="rounded-xl bg-black/5 p-4 text-sm dark:bg-white/10">
-            <p className="font-semibold">{servicio.nombre}</p>
-            <p>{nombreEstilista}</p>
-            <p>
+          <div className="space-y-2 rounded-xl border border-borde bg-tarjeta p-4 text-sm">
+            <p className="flex items-center justify-between font-semibold">
+              <span className="flex items-center gap-2">
+                <Scissors size={16} className="text-suave" />
+                {servicio.nombre}
+              </span>
+              {formatoPesos(servicio.precio)}
+            </p>
+            <p className="flex items-center gap-2">
+              <User size={16} className="text-suave" />
+              {nombreEstilista}
+            </p>
+            <p className="flex items-center gap-2">
+              <CalendarDays size={16} className="text-suave" />
               {formatoFechaLarga(hora)}, {formatoHora(hora)}
             </p>
-            <p>{formatoPesos(servicio.precio)}</p>
           </div>
 
           <h2 className="mt-6 text-lg font-semibold">Tus datos</h2>
@@ -264,7 +287,7 @@ export default function Reserva({ servicios, estilistas, relacion, diasParaReser
               value={nombre}
               onChange={(e) => setNombre(e.target.value)}
               placeholder="Tu nombre"
-              className="w-full rounded-lg border border-black/20 bg-transparent p-3 dark:border-white/25"
+              className="w-full rounded-lg border border-borde bg-transparent p-3"
             />
             <input
               required
@@ -273,19 +296,19 @@ export default function Reserva({ servicios, estilistas, relacion, diasParaReser
               value={telefono}
               onChange={(e) => setTelefono(e.target.value)}
               placeholder="Celular (WhatsApp)"
-              className="w-full rounded-lg border border-black/20 bg-transparent p-3 dark:border-white/25"
+              className="w-full rounded-lg border border-borde bg-transparent p-3"
             />
             <textarea
               value={nota}
               onChange={(e) => setNota(e.target.value)}
               placeholder="Nota opcional (ej. degradado bajo)"
               rows={2}
-              className="w-full rounded-lg border border-black/20 bg-transparent p-3 dark:border-white/25"
+              className="w-full rounded-lg border border-borde bg-transparent p-3"
             />
             <button
               type="submit"
               disabled={enviando}
-              className="w-full rounded-xl bg-black py-4 font-semibold text-white disabled:opacity-50 dark:bg-white dark:text-black"
+              className="w-full rounded-xl bg-white py-4 font-semibold text-black disabled:opacity-50"
             >
               {enviando ? "Reservando…" : "Confirmar cita"}
             </button>
