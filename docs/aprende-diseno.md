@@ -100,3 +100,14 @@ Reportes, Barberos y Salir.
 shadcn/ui agrega muchos archivos y conceptos nuevos. Con tus propios colores en
 `@theme` más los íconos de lucide se logra el mismo estilo y cada pantalla se
 sigue leyendo de arriba a abajo sin saltar entre archivos.
+
+## 6. El logo de Navia Barber Club
+
+El logo está en `src/components/Logo.tsx`, dibujado con SVG (círculos, texto y el bigote):
+
+- `<Logo />`: el sello completo. Va en la portada y en el ingreso.
+- `<MarcaLogo />`: solo el círculo con la N. Va arriba en el panel.
+- `src/app/icon.svg`: el ícono de la pestaña y del celular.
+
+El texto de alrededor usa `<textPath>`: el texto sigue un camino circular (`arco-logo`).
+Para cambiar la frase, edita el texto dentro de `<textPath>`.

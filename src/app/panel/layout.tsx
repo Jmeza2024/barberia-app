@@ -1,7 +1,8 @@
 // Un "layout" envuelve todas las páginas de su carpeta. Este pone el menú
 // del panel (abajo en el celular, arriba en pantallas grandes) y revisa
 // que quien entra sea parte del equipo.
-import { LogOut, Scissors } from "lucide-react";
+import { LogOut } from "lucide-react";
+import { MarcaLogo } from "@/components/Logo";
 import { obtenerPerfil } from "@/lib/sesion";
 import { cerrarSesion } from "../ingresar/acciones";
 import NavPanel from "./NavPanel";
@@ -34,9 +35,7 @@ export default async function LayoutPanel({ children }: { children: React.ReactN
     <div className="mx-auto max-w-3xl px-4 pt-5 pb-24 md:pb-8">
       <header className="flex flex-wrap items-center justify-between gap-3 border-b border-borde pb-4">
         <div className="flex items-center gap-3">
-          <span className="flex h-10 w-10 items-center justify-center rounded-full bg-boton">
-            <Scissors size={18} />
-          </span>
+          <MarcaLogo className="h-10 w-10" />
           <div>
             <p className="font-semibold leading-tight">{perfil.nombre}</p>
             <p className="text-xs text-suave">{esDueno ? "Dueño" : "Barbero"}</p>

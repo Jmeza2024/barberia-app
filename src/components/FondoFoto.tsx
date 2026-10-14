@@ -8,7 +8,7 @@ export default function FondoFoto() {
   return (
     <div aria-hidden className="fixed inset-0 -z-10">
       {/* La foto está en public/fondo-barberia.jpg, a todo color. */}
-      <Image src="/fondo-barberia.jpg" alt="" fill priority sizes="100vw" className="object-cover" />
+      <Image src="/fondo-barberia.jpg" alt="" fill priority sizes="100vw" className="object-cover object-[50%_15%]" />
       {/* Capa negra encima para que el texto blanco se lea bien. */}
       <div className="absolute inset-0 bg-gradient-to-b from-black/45 via-black/60 to-black/80" />
     </div>

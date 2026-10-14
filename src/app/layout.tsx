@@ -8,8 +8,8 @@ const inter = Inter({ variable: "--font-inter", subsets: ["latin"] });
 const oswald = Oswald({ variable: "--font-oswald", subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Barbería",
-  description: "Reserva tu cita en la barbería",
+  title: "Navia Barber Club",
+  description: "Reserva tu cita en Navia Barber Club",
 };
 
 // El color de la barra del navegador en el celular.

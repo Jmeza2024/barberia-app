@@ -2,8 +2,9 @@
 // servidor, pide los datos a Supabase y envía el HTML ya listo al celular.
 import Link from "next/link";
 import { crearClienteServidor } from "@/lib/supabase/server";
-import { CalendarPlus, ChevronDown, Clock, MapPin, MessageCircle, Scissors } from "lucide-react";
+import { CalendarPlus, ChevronDown, Clock, MapPin, MessageCircle } from "lucide-react";
 import Adorno from "@/components/Adorno";
+import Logo from "@/components/Logo";
 import { enlaceWhatsApp, formatoPesos } from "@/lib/formato";
 import FondoFoto from "@/components/FondoFoto";
 
@@ -52,15 +53,9 @@ export default async function Inicio() {
       <header className="relative overflow-hidden">
         <div className="rayos absolute inset-0" aria-hidden />
         <div className="relative mx-auto flex min-h-[82svh] max-w-md flex-col items-center justify-center px-4 py-16 text-center">
-          <span className="flex h-20 w-20 items-center justify-center rounded-full border border-zinc-500/60 bg-black/40 shadow-[0_0_60px_-10px_rgb(255_255_255/0.35)]">
-            <Scissors size={34} strokeWidth={1.5} />
-          </span>
-          <div className="mt-6">
-            <Adorno texto="Barbería" />
-          </div>
-          <h1 className="texto-plata mt-3 text-5xl leading-none font-bold tracking-[0.08em] uppercase sm:text-6xl">
-            {negocio?.nombre ?? "Barbería"}
-          </h1>
+          {/* El logo hace de título. El nombre queda escrito para Google y lectores de pantalla. */}
+          <h1 className="sr-only">{negocio?.nombre ?? "Navia Barber Club"}</h1>
+          <Logo className="w-64 drop-shadow-[0_0_40px_rgb(255_255_255/0.25)] sm:w-72" />
           {negocio && (
             <p className="mt-4 flex items-center justify-center gap-1.5 text-sm text-suave">
               <Clock size={14} />
