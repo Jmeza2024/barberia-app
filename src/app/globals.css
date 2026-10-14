@@ -8,7 +8,7 @@
 */
 @theme {
   --color-fondo: #0b0b0c; /* fondo de toda la app */
-  --color-tarjeta: #18181b; /* tarjetas: servicios, citas, ventas */
+  --color-tarjeta: rgb(24 24 27 / 0.82); /* tarjetas: un poco transparentes, deja ver el fondo */
   --color-borde: #2e2e33; /* líneas y bordes */
   --color-suave: #a1a1aa; /* texto secundario: duración, "con Carlos" */
   --color-texto: #f4f4f5; /* texto principal y precios */
@@ -23,10 +23,57 @@
   color-scheme: dark;
 }
 
+/*
+  El fondo: negro con tres capas encima.
+  1. Una luz suave arriba (como un foco sobre el sillón).
+  2. Un patrón art déco de abanicos (public/patron.svg), casi invisible.
+  3. Un grano fino (body::after) que le da textura de papel o cuero.
+  background-attachment: fixed hace que el fondo no se mueva al bajar.
+*/
 body {
-  background: var(--color-fondo);
+  background-color: var(--color-fondo);
+  background-image:
+    radial-gradient(ellipse 90% 45% at 50% -5%, rgb(255 255 255 / 0.09), transparent 70%),
+    url("/patron.svg");
+  background-attachment: fixed;
   color: var(--color-texto);
   font-family: var(--font-sans);
+}
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  pointer-events: none;
+  opacity: 0.06;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+}
+
+/* Clases propias. Se usan como cualquier clase de Tailwind: className="boton-plata". */
+
+/* Botón principal: blanco con un brillo metálico, como una navaja. */
+@utility boton-plata {
+  background-image: linear-gradient(180deg, #ffffff 0%, #d4d4d8 100%);
+  color: #0b0b0c;
+  box-shadow:
+    0 10px 30px -12px rgb(255 255 255 / 0.45),
+    inset 0 1px 0 rgb(255 255 255 / 0.9);
+}
+
+/* Texto plateado: de blanco a gris, para los títulos grandes. */
+@utility texto-plata {
+  background-image: linear-gradient(180deg, #ffffff 30%, #9f9fa8 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Rayos de luz art déco que salen desde arriba, para la portada. */
+@utility rayos {
+  background-image:
+    radial-gradient(ellipse 70% 60% at 50% 0%, rgb(255 255 255 / 0.14), transparent 70%),
+    repeating-conic-gradient(from 180deg at 50% -10%, rgb(255 255 255 / 0.05) 0deg 0.6deg, transparent 0.6deg 7deg);
+  mask-image: linear-gradient(to bottom, black 55%, transparent);
 }
 
 /* Los títulos usan Oswald: alta y fuerte, como letrero de barbería. */
@@ -44,4 +91,12 @@ select {
 input::placeholder {
   color: var(--color-suave);
   opacity: 0.7;
+}
+
+/* Todos los títulos principales con el brillo plateado. */
+h1 {
+  background-image: linear-gradient(180deg, #ffffff 30%, #a1a1aa 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }

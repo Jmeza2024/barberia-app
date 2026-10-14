@@ -158,7 +158,7 @@ export default async function PaginaCitaEquipo({
       {confirmada && (
         <div className="mt-4 flex flex-wrap gap-2">
           <form action={marcarEstado.bind(null, cita.id, "atendida")}>
-            <button className="rounded-xl bg-white px-4 py-3 text-sm font-semibold text-black">
+            <button className="rounded-xl boton-plata px-4 py-3 text-sm font-semibold text-black">
               ✓ Atendida
             </button>
           </form>

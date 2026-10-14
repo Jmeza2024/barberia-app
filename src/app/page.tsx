@@ -2,7 +2,8 @@
 // servidor, pide los datos a Supabase y envía el HTML ya listo al celular.
 import Link from "next/link";
 import { crearClienteServidor } from "@/lib/supabase/server";
-import { CalendarPlus, Clock, MapPin, MessageCircle, Scissors } from "lucide-react";
+import { CalendarPlus, ChevronDown, Clock, MapPin, MessageCircle, Scissors } from "lucide-react";
+import Adorno from "@/components/Adorno";
 import { enlaceWhatsApp, formatoPesos } from "@/lib/formato";
 
 // Le dice a Next.js que vuelva a pedir los datos en cada visita,
@@ -41,84 +42,109 @@ export default async function Inicio() {
   }
 
   const estiloAccion =
-    "flex flex-col items-center gap-1.5 rounded-xl border border-borde bg-tarjeta py-3 text-xs";
+    "flex items-center justify-center gap-2 rounded-xl border border-zinc-600/60 bg-black/30 py-3 text-sm backdrop-blur";
 
   return (
-    <main className="mx-auto max-w-md px-4 pb-12">
-      {/* Portada */}
-      <header className="pt-12 pb-8 text-center">
-        <span className="mx-auto flex h-16 w-16 items-center justify-center rounded-full border border-borde bg-tarjeta">
-          <Scissors size={28} />
-        </span>
-        <h1 className="mt-4 text-4xl font-bold uppercase">{negocio?.nombre ?? "Barbería"}</h1>
-        {negocio && (
-          <p className="mt-2 flex items-center justify-center gap-1.5 text-sm text-suave">
-            <Clock size={14} />
-            Abierto de {negocio.hora_apertura.slice(0, 5)} a {negocio.hora_cierre.slice(0, 5)}
-          </p>
-        )}
+    <main className="pb-12">
+      {/* Portada: ocupa casi toda la pantalla, con rayos de luz de fondo */}
+      <header className="relative overflow-hidden">
+        <div className="rayos absolute inset-0" aria-hidden />
+        <div className="relative mx-auto flex min-h-[82svh] max-w-md flex-col items-center justify-center px-4 py-16 text-center">
+          <span className="flex h-20 w-20 items-center justify-center rounded-full border border-zinc-500/60 bg-black/40 shadow-[0_0_60px_-10px_rgb(255_255_255/0.35)]">
+            <Scissors size={34} strokeWidth={1.5} />
+          </span>
+          <div className="mt-6">
+            <Adorno texto="Barbería" />
+          </div>
+          <h1 className="texto-plata mt-3 text-5xl leading-none font-bold tracking-[0.08em] uppercase sm:text-6xl">
+            {negocio?.nombre ?? "Barbería"}
+          </h1>
+          {negocio && (
+            <p className="mt-4 flex items-center justify-center gap-1.5 text-sm text-suave">
+              <Clock size={14} />
+              Abierto de {negocio.hora_apertura.slice(0, 5)} a {negocio.hora_cierre.slice(0, 5)}
+            </p>
+          )}
+
+          <Link
+            href="/reservar"
+            className="boton-plata mt-10 flex w-full items-center justify-center gap-2 rounded-xl py-4 font-semibold tracking-wide uppercase"
+          >
+            <CalendarPlus size={20} />
+            Reservar cita
+          </Link>
+
+          {/* Contacto: solo aparecen los botones con datos */}
+          {negocio && (negocio.telefono_whatsapp || negocio.direccion) && (
+            <div className="mt-3 grid w-full grid-cols-2 gap-2">
+              {negocio.telefono_whatsapp && (
+                <a href={enlaceWhatsApp(negocio.telefono_whatsapp)} className={estiloAccion}>
+                  <MessageCircle size={18} />
+                  WhatsApp
+                </a>
+              )}
+              {negocio.direccion && (
+                <a
+                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(negocio.direccion)}`}
+                  className={estiloAccion}
+                >
+                  <MapPin size={18} />
+                  Cómo llegar
+                </a>
+              )}
+            </div>
+          )}
+
+          <ChevronDown size={22} className="mt-10 animate-bounce text-suave" aria-hidden />
+        </div>
       </header>
 
-      <Link
-        href="/reservar"
-        className="flex w-full items-center justify-center gap-2 rounded-xl bg-white py-4 font-semibold text-black"
-      >
-        <CalendarPlus size={20} />
-        Reservar cita
-      </Link>
+      <div className="mx-auto max-w-md px-4">
+        {error && (
+          <p className="mb-6 rounded-lg bg-red-950/60 p-4 text-sm text-red-200">
+            No se pudo conectar con la base de datos. Revisa tu archivo
+            .env.local. Detalle: {error.message}
+          </p>
+        )}
 
-      {/* Contacto: solo aparecen los botones con datos */}
-      {negocio && (negocio.telefono_whatsapp || negocio.direccion) && (
-        <div className="mt-3 grid grid-cols-2 gap-2">
-          {negocio.telefono_whatsapp && (
-            <a href={enlaceWhatsApp(negocio.telefono_whatsapp)} className={estiloAccion}>
-              <MessageCircle size={20} />
-              WhatsApp
-            </a>
-          )}
-          {negocio.direccion && (
-            <a
-              href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(negocio.direccion)}`}
-              className={estiloAccion}
-            >
-              <MapPin size={20} />
-              Cómo llegar
-            </a>
-          )}
-        </div>
-      )}
+        {/* Servicios: como la carta de precios colgada en la pared */}
+        <section className="rounded-2xl border border-borde bg-tarjeta px-5 py-8">
+          <Adorno />
+          <h2 className="texto-plata mt-3 text-center text-3xl font-bold tracking-[0.12em] uppercase">
+            Servicios
+          </h2>
+          {[...porCategoria.entries()].map(([categoria, lista]) => (
+            <div key={categoria} className="mt-8">
+              <p className="text-center text-[11px] font-semibold tracking-[0.35em] text-suave uppercase">
+                {categoria}
+              </p>
+              <ul className="mt-4 space-y-4">
+                {lista.map((servicio) => (
+                  <li key={servicio.id}>
+                    {/* Nombre ........ precio, con puntitos en el medio */}
+                    <div className="flex items-baseline gap-2">
+                      <p className="font-medium">{servicio.nombre}</p>
+                      <span className="flex-1 border-b border-dotted border-zinc-600" />
+                      <p className="font-semibold">{formatoPesos(servicio.precio)}</p>
+                    </div>
+                    <p className="text-xs text-suave">{servicio.duracion_min} min</p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </section>
 
-      {error && (
-        <p className="mt-6 rounded-lg bg-red-950/60 p-4 text-sm text-red-200">
-          No se pudo conectar con la base de datos. Revisa tu archivo
-          .env.local. Detalle: {error.message}
-        </p>
-      )}
-
-      <h2 className="mt-10 text-2xl font-bold uppercase">Servicios</h2>
-      {[...porCategoria.entries()].map(([categoria, lista]) => (
-        <div key={categoria} className="mt-4">
-          <p className="text-xs font-semibold tracking-widest text-suave uppercase">{categoria}</p>
-          <ul className="mt-2 divide-y divide-borde overflow-hidden rounded-xl border border-borde bg-tarjeta">
-            {lista.map((servicio) => (
-              <li key={servicio.id} className="flex items-center justify-between p-4">
-                <div>
-                  <p className="font-medium">{servicio.nombre}</p>
-                  <p className="text-sm text-suave">{servicio.duracion_min} min</p>
-                </div>
-                <p className="font-semibold">{formatoPesos(servicio.precio)}</p>
-              </li>
-            ))}
-          </ul>
-        </div>
-      ))}
-
-      {negocio?.direccion && (
-        <p className="mt-10 flex items-center justify-center gap-1.5 text-center text-sm text-suave">
-          <MapPin size={14} />
-          {negocio.direccion}
-        </p>
-      )}
+        {negocio?.direccion && (
+          <footer className="mt-10 text-center text-sm text-suave">
+            <Adorno />
+            <p className="mt-3 flex items-center justify-center gap-1.5">
+              <MapPin size={14} />
+              {negocio.direccion}
+            </p>
+          </footer>
+        )}
+      </div>
     </main>
   );
 }

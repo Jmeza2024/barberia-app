@@ -2,6 +2,7 @@
 // ganancias y, para el dueño, cuánto vendió cada barbero.
 // Igual que en la agenda, RLS hace que el barbero solo vea sus ventas.
 import Link from "next/link";
+import { ChevronLeft, ChevronRight, Plus } from "lucide-react";
 import { obtenerPerfil } from "@/lib/sesion";
 import { formatoFechaLarga, formatoHora, formatoPesos, hoyEnBogota, sumarDias } from "@/lib/formato";
 import {
@@ -16,7 +17,7 @@ import {
 } from "@/lib/ventas";
 
 const esFecha = (texto?: string) => !!texto && /^\d{4}-\d{2}-\d{2}$/.test(texto);
-const estiloBotonDia = "rounded-lg border border-borde bg-tarjeta px-3 py-2";
+const estiloBotonDia = "flex items-center gap-1 rounded-lg border border-borde bg-tarjeta px-3 py-2";
 
 export default async function PaginaVentas({
   searchParams,
@@ -53,15 +54,17 @@ export default async function PaginaVentas({
         </div>
         <Link
           href="/panel/ventas/nueva"
-          className="rounded-xl bg-white px-4 py-3 text-sm font-semibold text-black"
+          className="flex items-center gap-1.5 rounded-xl boton-plata px-4 py-3 text-sm font-semibold text-black"
         >
-          + Registrar venta
+          <Plus size={18} />
+          Registrar venta
         </Link>
       </div>
 
       <nav className="mt-4 flex items-center gap-2 text-sm">
         <Link href={`/panel/ventas?fecha=${sumarDias(fecha, -1)}`} className={estiloBotonDia}>
-          ← Anterior
+          <ChevronLeft size={16} />
+          Anterior
         </Link>
         {fecha !== hoy && (
           <Link href="/panel/ventas" className={estiloBotonDia}>
@@ -70,7 +73,8 @@ export default async function PaginaVentas({
         )}
         {fecha < hoy && (
           <Link href={`/panel/ventas?fecha=${sumarDias(fecha, 1)}`} className={estiloBotonDia}>
-            Siguiente →
+            Siguiente
+            <ChevronRight size={16} />
           </Link>
         )}
       </nav>

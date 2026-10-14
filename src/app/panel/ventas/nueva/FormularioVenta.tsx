@@ -162,7 +162,7 @@ export default function FormularioVenta({ servicios, productos, barberos, miId }
 
       <button
         disabled={cargando || (total <= 0 && !servicio)}
-        className="w-full rounded-xl bg-white py-4 font-semibold text-black disabled:opacity-50"
+        className="w-full rounded-xl boton-plata py-4 font-semibold text-black disabled:opacity-50"
       >
         {cargando ? "Guardando…" : `Registrar venta · ${formatoPesos(total)}`}
       </button>

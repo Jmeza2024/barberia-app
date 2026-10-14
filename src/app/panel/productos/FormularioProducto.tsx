@@ -51,7 +51,7 @@ export default function FormularioProducto() {
       </div>
       <button
         disabled={cargando}
-        className="w-full rounded-xl bg-white py-3 font-semibold text-black disabled:opacity-50"
+        className="w-full rounded-xl boton-plata py-3 font-semibold text-black disabled:opacity-50"
       >
         {cargando ? "Guardando…" : "Crear producto"}
       </button>

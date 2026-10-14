@@ -37,7 +37,7 @@ export default function FormularioIngreso() {
       />
       <button
         disabled={cargando}
-        className="w-full rounded-xl bg-white py-4 font-semibold text-black disabled:opacity-50"
+        className="w-full rounded-xl boton-plata py-4 font-semibold text-black disabled:opacity-50"
       >
         {cargando ? "Entrando…" : "Entrar"}
       </button>

@@ -24,6 +24,32 @@ principal de cada pantalla (`bg-white text-black`).
 La app siempre está en modo oscuro: `color-scheme: dark` le dice al navegador
 que también pinte oscuros los campos de fecha, las barras de desplazamiento, etc.
 
+## 1b. El fondo y el brillo plateado
+
+El fondo negro tiene tres capas, todas en `globals.css`:
+
+1. Una luz suave arriba, como un foco (`radial-gradient`).
+2. Un patrón art déco de abanicos casi invisible: `public/patron.svg`.
+3. Un grano fino encima de todo (`body::after`), que da textura.
+
+En la portada (`src/app/page.tsx`) hay además **rayos de luz** (la clase `rayos`).
+
+También hay tres clases propias, creadas con `@utility`:
+
+- `boton-plata`: el botón principal, blanco con brillo metálico.
+- `texto-plata`: texto que va de blanco a gris. Todos los `h1` lo usan.
+- `rayos`: los rayos de la portada.
+
+**¿Quieres una foto de la barbería de fondo?** Guarda la foto como
+`public/portada.jpg`. Luego, en `src/app/page.tsx`, busca
+`<div className="rayos absolute inset-0" aria-hidden />` y cámbialo por:
+
+```tsx
+<div className="absolute inset-0 bg-[url(/portada.jpg)] bg-cover bg-center opacity-40 grayscale" aria-hidden />
+```
+
+`grayscale` la pone en blanco y negro y `opacity-40` la oscurece para que el texto se lea.
+
 ## 2. Las letras
 
 En `src/app/layout.tsx` se cargan dos fuentes de Google con `next/font/google`:

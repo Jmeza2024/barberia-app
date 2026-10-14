@@ -88,7 +88,7 @@ export default async function PanelAgenda({
         </div>
         <Link
           href={`/panel/nueva-cita?fecha=${fecha}`}
-          className="flex items-center gap-1.5 rounded-xl bg-white px-4 py-3 text-sm font-semibold text-black"
+          className="flex items-center gap-1.5 rounded-xl boton-plata px-4 py-3 text-sm font-semibold text-black"
         >
           <Plus size={18} />
           Nueva cita

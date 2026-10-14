@@ -308,7 +308,7 @@ export default function Reserva({ servicios, estilistas, relacion, diasParaReser
             <button
               type="submit"
               disabled={enviando}
-              className="w-full rounded-xl bg-white py-4 font-semibold text-black disabled:opacity-50"
+              className="w-full rounded-xl boton-plata py-4 font-semibold text-black disabled:opacity-50"
             >
               {enviando ? "Reservando…" : "Confirmar cita"}
             </button>
