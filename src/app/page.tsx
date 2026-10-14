@@ -5,7 +5,7 @@ import { crearClienteServidor } from "@/lib/supabase/server";
 import { CalendarPlus, ChevronDown, Clock, MapPin, MessageCircle } from "lucide-react";
 import Adorno from "@/components/Adorno";
 import Logo from "@/components/Logo";
-import { enlaceWhatsApp, formatoPesos } from "@/lib/formato";
+import { enlaceWhatsApp, formatoHoraSola, formatoPesos } from "@/lib/formato";
 import FondoFoto from "@/components/FondoFoto";
 
 // Le dice a Next.js que vuelva a pedir los datos en cada visita,
@@ -59,7 +59,7 @@ export default async function Inicio() {
           {negocio && (
             <p className="mt-4 flex items-center justify-center gap-1.5 text-sm text-suave">
               <Clock size={14} />
-              Abierto de {negocio.hora_apertura.slice(0, 5)} a {negocio.hora_cierre.slice(0, 5)}
+              Abierto de {formatoHoraSola(negocio.hora_apertura)} a {formatoHoraSola(negocio.hora_cierre)}
             </p>
           )}
 

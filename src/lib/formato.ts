@@ -24,6 +24,14 @@ export function formatoHora(fecha: string | Date) {
   });
 }
 
+// Una hora sola de la base de datos, en formato de 12 horas.
+// "21:00:00" -> "9 p. m."   "09:30:00" -> "9:30 a. m."
+export function formatoHoraSola(hora: string) {
+  const [h, m] = hora.split(":").map(Number);
+  const hora12 = h % 12 === 0 ? 12 : h % 12;
+  return `${hora12}${m ? `:${String(m).padStart(2, "0")}` : ""} ${h < 12 ? "a. m." : "p. m."}`;
+}
+
 // "2026-10-12T15:00:00Z" -> "Lunes, 12 de octubre"
 export function formatoFechaLarga(fecha: string | Date) {
   const texto = new Date(fecha).toLocaleDateString("es-CO", {
