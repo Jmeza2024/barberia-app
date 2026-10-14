@@ -10,7 +10,7 @@ import { nombreFormaPago, type FormaPago } from "@/lib/ventas";
 import { registrarVenta, type EstadoVenta } from "./acciones";
 
 const estiloCampo =
-  "w-full rounded-lg border border-black/20 bg-transparent p-3 dark:border-white/25";
+  "w-full rounded-lg border border-borde bg-transparent p-3";
 
 type Props = {
   servicios: { id: string; nombre: string; precio: number }[];
@@ -49,7 +49,7 @@ export default function FormularioVenta({ servicios, productos, barberos, miId }
   return (
     <form action={accion} className="mt-4 space-y-4">
       {estado.error && (
-        <p className="rounded-lg bg-red-100 p-3 text-sm text-red-800">{estado.error}</p>
+        <p className="rounded-lg bg-red-950/60 p-3 text-sm text-red-200">{estado.error}</p>
       )}
 
       {barberos && (
@@ -92,7 +92,7 @@ export default function FormularioVenta({ servicios, productos, barberos, miId }
       {productos.length > 0 && (
         <div>
           <p className="text-sm font-semibold">Productos</p>
-          <ul className="mt-2 divide-y divide-black/10 rounded-xl border border-black/10 dark:divide-white/15 dark:border-white/15">
+          <ul className="mt-2 divide-y divide-borde rounded-xl border border-borde bg-tarjeta">
             {productos.map((p) => {
               const cantidad = cantidades[p.id] ?? 0;
               const agotado = p.existencias <= 0;
@@ -100,7 +100,7 @@ export default function FormularioVenta({ servicios, productos, barberos, miId }
                 <li key={p.id} className={`flex items-center justify-between gap-2 p-3 ${agotado ? "opacity-50" : ""}`}>
                   <div>
                     <p className="text-sm">{p.nombre}</p>
-                    <p className="text-xs opacity-70">
+                    <p className="text-xs text-suave">
                       {formatoPesos(Number(p.precio_venta))} · {agotado ? "agotado" : `quedan ${p.existencias}`}
                     </p>
                   </div>
@@ -109,7 +109,7 @@ export default function FormularioVenta({ servicios, productos, barberos, miId }
                       type="button"
                       onClick={() => cambiarCantidad(p.id, -1, p.existencias)}
                       disabled={cantidad === 0}
-                      className="h-9 w-9 rounded-lg border border-black/20 disabled:opacity-30 dark:border-white/25"
+                      className="h-9 w-9 rounded-lg border border-borde disabled:opacity-30"
                       aria-label={`Quitar ${p.nombre}`}
                     >
                       −
@@ -119,7 +119,7 @@ export default function FormularioVenta({ servicios, productos, barberos, miId }
                       type="button"
                       onClick={() => cambiarCantidad(p.id, 1, p.existencias)}
                       disabled={cantidad >= p.existencias}
-                      className="h-9 w-9 rounded-lg border border-black/20 disabled:opacity-30 dark:border-white/25"
+                      className="h-9 w-9 rounded-lg border border-borde disabled:opacity-30"
                       aria-label={`Agregar ${p.nombre}`}
                     >
                       +
@@ -142,8 +142,8 @@ export default function FormularioVenta({ servicios, productos, barberos, miId }
               key={forma}
               className={`cursor-pointer rounded-lg border p-2 text-center text-sm ${
                 formaPago === forma
-                  ? "border-black bg-black text-white dark:border-white dark:bg-white dark:text-black"
-                  : "border-black/20 dark:border-white/25"
+                  ? "border-white bg-white text-black"
+                  : "border-borde"
               }`}
             >
               <input
@@ -162,7 +162,7 @@ export default function FormularioVenta({ servicios, productos, barberos, miId }
 
       <button
         disabled={cargando || (total <= 0 && !servicio)}
-        className="w-full rounded-xl bg-black py-4 font-semibold text-white disabled:opacity-50 dark:bg-white dark:text-black"
+        className="w-full rounded-xl boton-plata py-4 font-semibold text-black disabled:opacity-50"
       >
         {cargando ? "Guardando…" : `Registrar venta · ${formatoPesos(total)}`}
       </button>

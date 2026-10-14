@@ -36,7 +36,7 @@ export default async function PaginaNuevaCita({
         ← Volver a la agenda
       </Link>
       <h1 className="mt-3 text-2xl font-bold">Nueva cita</h1>
-      <p className="mt-1 text-sm opacity-70">Para quien llama o llega al local.</p>
+      <p className="mt-1 text-sm text-suave">Para quien llama o llega al local.</p>
       <FormularioCita
         servicios={servicios ?? []}
         barberos={barberos}

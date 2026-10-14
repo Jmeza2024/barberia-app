@@ -38,7 +38,7 @@ type Cita = {
   estilistas: { id: string; nombre: string } | null;
 };
 
-const estiloBoton = "rounded-xl border border-black/15 px-4 py-3 text-sm font-semibold dark:border-white/20";
+const estiloBoton = "rounded-xl border border-borde bg-tarjeta px-4 py-3 text-sm font-semibold";
 const esFecha = (texto?: string) => !!texto && /^\d{4}-\d{2}-\d{2}$/.test(texto);
 
 export default async function PaginaCitaEquipo({
@@ -114,26 +114,26 @@ export default async function PaginaCitaEquipo({
       </Link>
 
       {mensaje && (
-        <div className="mt-4 rounded-xl bg-green-100 p-4 text-sm text-green-900">
+        <div className="mt-4 rounded-xl bg-emerald-950/60 p-4 text-sm text-emerald-200">
           <p className="font-semibold">
             {parametros.aviso === "cancelada" ? "Cita cancelada." : "Cita cambiada."} Avísale al cliente:
           </p>
           <a
             href={enlaceWhatsAppConMensaje(cita.clientes.telefono, mensaje)}
-            className="mt-2 inline-block rounded-lg bg-green-700 px-4 py-2 font-semibold text-white"
+            className="mt-2 inline-block rounded-lg bg-emerald-700 px-4 py-2 font-semibold text-white"
           >
             Enviar aviso por WhatsApp
           </a>
         </div>
       )}
       {parametros.error === "ocupada" && (
-        <p className="mt-4 rounded-xl bg-red-100 p-4 text-sm text-red-800">
+        <p className="mt-4 rounded-xl bg-red-950/60 p-4 text-sm text-red-200">
           Esa hora se acaba de ocupar. Elige otra.
         </p>
       )}
 
       {/* Datos de la cita */}
-      <div className="mt-4 rounded-xl border border-black/10 p-4 dark:border-white/15">
+      <div className="mt-4 rounded-xl border border-borde bg-tarjeta p-4">
         <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${colorEstado[cita.estado]}`}>
           {nombreEstado[cita.estado]}
         </span>
@@ -147,10 +147,10 @@ export default async function PaginaCitaEquipo({
         <p>
           {formatoFechaLarga(cita.inicio)}, {formatoHora(cita.inicio)} – {formatoHora(cita.fin)}
         </p>
-        <p className="text-sm opacity-70">con {cita.estilistas.nombre}</p>
+        <p className="text-sm text-suave">con {cita.estilistas.nombre}</p>
         {cita.nota && <p className="mt-2 text-sm italic">“{cita.nota}”</p>}
         {cita.motivo_cancelacion && (
-          <p className="mt-2 text-sm text-red-700">Motivo: {cita.motivo_cancelacion}</p>
+          <p className="mt-2 text-sm text-red-400">Motivo: {cita.motivo_cancelacion}</p>
         )}
       </div>
 
@@ -158,7 +158,7 @@ export default async function PaginaCitaEquipo({
       {confirmada && (
         <div className="mt-4 flex flex-wrap gap-2">
           <form action={marcarEstado.bind(null, cita.id, "atendida")}>
-            <button className="rounded-xl bg-green-700 px-4 py-3 text-sm font-semibold text-white">
+            <button className="rounded-xl boton-plata px-4 py-3 text-sm font-semibold text-black">
               ✓ Atendida
             </button>
           </form>
@@ -174,7 +174,7 @@ export default async function PaginaCitaEquipo({
       {venta && (
         <Link
           href={`/panel/ventas/${venta.id}`}
-          className="mt-4 inline-block rounded-xl border border-black/15 px-4 py-3 text-sm font-semibold dark:border-white/20"
+          className="mt-4 inline-block rounded-xl border border-borde bg-tarjeta px-4 py-3 text-sm font-semibold"
         >
           Ver venta · agregar productos
         </Link>
@@ -189,7 +189,7 @@ export default async function PaginaCitaEquipo({
 
       {/* Cambiar de hora */}
       {confirmada && (
-        <div className="mt-6 rounded-xl border border-black/10 p-4 dark:border-white/15">
+        <div className="mt-6 rounded-xl border border-borde bg-tarjeta p-4">
           <h2 className="font-semibold">Cambiar hora{esDueno ? " o barbero" : ""}</h2>
 
           {esDueno && barberos && fechaNueva && (
@@ -198,7 +198,7 @@ export default async function PaginaCitaEquipo({
               <select
                 name="barbero"
                 defaultValue={barberoNuevo}
-                className="rounded-lg border border-black/15 bg-transparent px-3 py-2 dark:border-white/20"
+                className="rounded-lg border border-borde bg-transparent px-3 py-2"
               >
                 {barberos.map((b) => (
                   <option key={b.id} value={b.id}>
@@ -206,7 +206,7 @@ export default async function PaginaCitaEquipo({
                   </option>
                 ))}
               </select>
-              <button className="rounded-lg border border-black/15 px-3 py-2 dark:border-white/20">Ver horas</button>
+              <button className="rounded-lg border border-borde px-3 py-2">Ver horas</button>
             </form>
           )}
 
@@ -220,8 +220,8 @@ export default async function PaginaCitaEquipo({
                   href={`/panel/cita/${cita.id}?fecha=${d}${esDueno ? `&barbero=${barberoNuevo}` : ""}`}
                   className={`min-w-14 rounded-xl border p-2 text-center ${
                     elegido
-                      ? "border-black bg-black text-white dark:border-white dark:bg-white dark:text-black"
-                      : "border-black/10 dark:border-white/15"
+                      ? "border-white bg-white text-black"
+                      : "border-borde"
                   }`}
                 >
                   <span className="block text-xs capitalize">{p.diaSemana}</span>
@@ -232,9 +232,9 @@ export default async function PaginaCitaEquipo({
           </div>
 
           {!fechaNueva ? (
-            <p className="mt-2 text-sm opacity-70">Elige un día para ver las horas libres.</p>
+            <p className="mt-2 text-sm text-suave">Elige un día para ver las horas libres.</p>
           ) : !horas?.length ? (
-            <p className="mt-2 text-sm opacity-70">No hay horas libres ese día.</p>
+            <p className="mt-2 text-sm text-suave">No hay horas libres ese día.</p>
           ) : (
             <div className="mt-2 grid grid-cols-3 gap-2 sm:grid-cols-4">
               {(horas as { inicio: string }[]).map((h) => (
@@ -242,7 +242,7 @@ export default async function PaginaCitaEquipo({
                   key={h.inicio}
                   action={cambiarHora.bind(null, cita.id, barberoNuevo, h.inicio, cita.servicios!.duracion_min)}
                 >
-                  <button className="w-full rounded-lg border border-black/10 py-2 text-sm dark:border-white/15">
+                  <button className="w-full rounded-lg border border-borde py-2 text-sm">
                     {formatoHora(h.inicio)}
                   </button>
                 </form>
@@ -256,15 +256,15 @@ export default async function PaginaCitaEquipo({
       {confirmada && (
         <form
           action={cancelarCita.bind(null, cita.id)}
-          className="mt-6 space-y-2 rounded-xl border border-red-200 p-4"
+          className="mt-6 space-y-2 rounded-xl border border-red-900/70 p-4"
         >
-          <h2 className="font-semibold text-red-700">Cancelar cita</h2>
+          <h2 className="font-semibold text-red-400">Cancelar cita</h2>
           <input
             name="motivo"
             placeholder="Motivo (opcional), ej. el barbero se enfermó"
-            className="w-full rounded-lg border border-black/20 bg-transparent p-3 text-sm dark:border-white/25"
+            className="w-full rounded-lg border border-borde bg-transparent p-3 text-sm"
           />
-          <button className="rounded-xl border border-red-600 px-4 py-3 text-sm font-semibold text-red-600">
+          <button className="rounded-xl border border-red-500/70 px-4 py-3 text-sm font-semibold text-red-400">
             Cancelar cita
           </button>
         </form>

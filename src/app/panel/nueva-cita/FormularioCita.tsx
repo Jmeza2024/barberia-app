@@ -4,7 +4,7 @@ import { crearCitaEquipo, type EstadoNuevaCita } from "./acciones";
 import { formatoPesos } from "@/lib/formato";
 
 const estiloCampo =
-  "w-full rounded-lg border border-black/20 bg-transparent p-3 dark:border-white/25";
+  "w-full rounded-lg border border-borde bg-transparent p-3";
 
 type Props = {
   servicios: { id: string; nombre: string; precio: number; duracion_min: number }[];
@@ -25,7 +25,7 @@ export default function FormularioCita({ servicios, barberos, fecha, horaSugerid
   return (
     <form key={estado.intento} action={accion} className="mt-4 space-y-3">
       {estado.error && (
-        <p className="rounded-lg bg-red-100 p-3 text-sm text-red-800">{estado.error}</p>
+        <p className="rounded-lg bg-red-950/60 p-3 text-sm text-red-200">{estado.error}</p>
       )}
       <input name="nombre" required placeholder="Nombre del cliente" defaultValue={v.nombre} className={estiloCampo} />
       <input
@@ -66,7 +66,7 @@ export default function FormularioCita({ servicios, barberos, fecha, horaSugerid
       <input name="nota" placeholder="Nota (opcional)" defaultValue={v.nota} className={estiloCampo} />
       <button
         disabled={cargando}
-        className="w-full rounded-xl bg-black py-4 font-semibold text-white disabled:opacity-50 dark:bg-white dark:text-black"
+        className="w-full rounded-xl boton-plata py-4 font-semibold text-black disabled:opacity-50"
       >
         {cargando ? "Guardando…" : "Crear cita"}
       </button>

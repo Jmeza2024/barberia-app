@@ -42,6 +42,10 @@ Hecha con **Next.js** (pantallas y lógica), **Supabase** (base de datos y login
 | `src/app/cita/[codigo]/` | La página de cada cita, para verla o cancelarla. |
 | `src/app/ingresar/` | El login del equipo. |
 | `src/app/panel/` | El panel del dueño y los barberos: agenda, citas, recordatorios, ventas, productos, reportes y barberos. |
+| `src/app/panel/NavPanel.tsx` | El menú del panel: barra abajo en el celular, fila arriba en el computador. |
+| `src/app/panel/mas/` | La pantalla "Más" del celular: Productos, Reportes, Barberos y Salir. |
+| `src/app/globals.css` | Los colores de la app (negro, gris, blanco) en un solo lugar. |
+| `src/app/manifest.ts` y `src/app/icon.svg` | Nombre e ícono para "Agregar a pantalla de inicio". |
 | `src/lib/ventas.ts` | Sumas de ventas por día, por barbero y por forma de pago. |
 | `src/lib/periodos.ts` y `src/lib/reportes.ts` | Periodos (día, semana, mes) y el cálculo de la comisión. |
 | `src/lib/mensajes.ts` | Los textos de WhatsApp para los clientes (recordatorio, cancelación, cambio). |
@@ -66,4 +70,5 @@ Hecha con **Next.js** (pantallas y lógica), **Supabase** (base de datos y login
 - [x] 6. Ventas y productos
 - [x] 7. Reportes y comisión
 - [x] 8. WhatsApp
+- [x] Diseño negro y gris ([explicación](docs/aprende-diseno.md))
 - [ ] 9. Lanzar

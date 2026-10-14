@@ -14,8 +14,8 @@ const pestanas: { tipo: TipoPeriodo; nombre: string }[] = [
   { tipo: "mes", nombre: "Mes" },
   { tipo: "rango", nombre: "Fechas" },
 ];
-const estiloBoton = "rounded-lg border border-black/15 px-3 py-2 dark:border-white/20";
-const estiloCampo = "rounded-lg border border-black/20 bg-transparent p-2 dark:border-white/25";
+const estiloBoton = "rounded-lg border border-borde px-3 py-2";
+const estiloCampo = "rounded-lg border border-borde bg-transparent p-2";
 
 export default async function PaginaReportes({
   searchParams,
@@ -33,13 +33,13 @@ export default async function PaginaReportes({
       <h1 className="text-2xl font-bold">Reportes</h1>
 
       {/* Elegir el tipo de periodo */}
-      <nav className="mt-4 grid grid-cols-4 gap-1 rounded-xl bg-black/5 p-1 text-sm dark:bg-white/10">
+      <nav className="mt-4 grid grid-cols-4 gap-1 rounded-xl bg-white/10 p-1 text-sm">
         {pestanas.map((p) => (
           <Link
             key={p.tipo}
             href={`/panel/reportes?periodo=${p.tipo}`}
             className={`rounded-lg py-2 text-center ${
-              periodo.tipo === p.tipo ? "bg-white font-semibold shadow-sm dark:bg-black" : ""
+              periodo.tipo === p.tipo ? "bg-white font-semibold text-black" : ""
             }`}
           >
             {p.nombre}
@@ -83,7 +83,7 @@ export default async function PaginaReportes({
         <Cifra titulo="Comisiones" valor={formatoPesos(t.comision)} />
         <Cifra titulo="Para el negocio" valor={formatoPesos(t.negocio)} resaltar />
       </div>
-      <p className="mt-2 text-xs opacity-60">
+      <p className="mt-2 text-xs text-suave">
         Servicios {formatoPesos(t.servicios)} · Productos {formatoPesos(t.productos)}. La comisión se
         calcula solo sobre los servicios; los productos quedan para el negocio.
       </p>
@@ -92,12 +92,12 @@ export default async function PaginaReportes({
       <h2 className="mt-6 font-semibold">Por barbero</h2>
       <ul className="mt-2 space-y-2">
         {reporte.barberos.map((b) => (
-          <li key={b.id} className="rounded-xl border border-black/10 p-4 dark:border-white/15">
+          <li key={b.id} className="rounded-xl border border-borde bg-tarjeta p-4">
             <div className="flex items-baseline justify-between gap-2">
               <p className="font-semibold">{b.nombre}</p>
               <p className="font-semibold">{formatoPesos(b.total)}</p>
             </div>
-            <p className="text-sm opacity-70">
+            <p className="text-sm text-suave">
               {b.cortes} corte(s) · servicios {formatoPesos(b.servicios)} · productos{" "}
               {formatoPesos(b.productos)}
             </p>
@@ -141,15 +141,15 @@ export default async function PaginaReportes({
                   <span className="capitalize">
                     {p.diaSemana} {p.dia}
                   </span>
-                  <span className="h-3 rounded bg-black/5 dark:bg-white/10">
+                  <span className="h-3 rounded bg-white/10">
                     <span
-                      className="block h-3 rounded bg-black dark:bg-white"
+                      className="block h-3 rounded bg-white"
                       style={{ width: `${(d.total / maximoDia) * 100}%` }}
                     />
                   </span>
                   <span className="text-right">
                     {formatoPesos(d.total)}
-                    <span className="block text-xs opacity-60">{d.cortes} corte(s)</span>
+                    <span className="block text-xs text-suave">{d.cortes} corte(s)</span>
                   </span>
                 </li>
               );
@@ -162,7 +162,7 @@ export default async function PaginaReportes({
       <div className="mt-6 flex flex-wrap gap-2">
         <a
           href={enlaceCompartirWhatsApp(reporteEnTexto(periodo, reporte))}
-          className="rounded-xl bg-green-700 px-4 py-3 text-sm font-semibold text-white"
+          className="rounded-xl bg-emerald-700 px-4 py-3 text-sm font-semibold text-white"
         >
           Compartir por WhatsApp
         </a>
@@ -170,7 +170,7 @@ export default async function PaginaReportes({
           Descargar para Excel
         </a>
       </div>
-      <p className="mt-3 text-xs opacity-60">
+      <p className="mt-3 text-xs text-suave">
         La comisión usa el % que tiene hoy cada barbero. Si lo cambias, también cambia en los reportes de
         fechas pasadas.
       </p>
@@ -183,11 +183,11 @@ function Cifra({ titulo, valor, resaltar }: { titulo: string; valor: string; res
     <div
       className={`rounded-xl p-3 ${
         resaltar
-          ? "bg-black text-white dark:bg-white dark:text-black"
-          : "border border-black/10 dark:border-white/15"
+          ? "bg-white text-black"
+          : "border border-borde"
       }`}
     >
-      <p className="text-xs opacity-70">{titulo}</p>
+      <p className="text-xs text-suave">{titulo}</p>
       <p className="text-lg font-bold">{valor}</p>
     </div>
   );

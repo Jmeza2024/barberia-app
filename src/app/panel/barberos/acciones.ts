@@ -66,7 +66,7 @@ export async function crearBarbero(
     return fallo(`No se pudo crear el barbero: ${errorFicha?.message}`);
   }
 
-  // 3. Por defecto hace todos los servicios y trabaja de lunes a sábado, 9 a 19.
+  // 3. Por defecto hace todos los servicios y trabaja de lunes a sábado, 9 a. m. a 9 p. m.
   //    El dueño lo podrá ajustar después.
   const { data: servicios } = await supabase.from("servicios").select("id");
   await supabase
@@ -77,7 +77,7 @@ export async function crearBarbero(
       estilista_id: barbero.id,
       dia_semana: dia,
       hora_inicio: "09:00",
-      hora_fin: "19:00",
+      hora_fin: "21:00",
     })),
   );
 

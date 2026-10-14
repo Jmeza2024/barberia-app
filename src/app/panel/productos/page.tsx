@@ -14,8 +14,8 @@ type Producto = {
   activo: boolean;
 };
 
-const estiloCampo = "w-24 rounded-lg border border-black/20 bg-transparent p-2 dark:border-white/25";
-const estiloBoton = "rounded-lg border border-black/20 px-3 py-2 dark:border-white/25";
+const estiloCampo = "w-24 rounded-lg border border-borde bg-transparent p-2";
+const estiloBoton = "rounded-lg border border-borde px-3 py-2";
 
 export default async function PaginaProductos() {
   const { supabase, perfil } = await obtenerPerfil();
@@ -37,7 +37,7 @@ export default async function PaginaProductos() {
         <h1 className="text-2xl font-bold">Productos</h1>
 
         {pocos.length > 0 && (
-          <p className="mt-3 rounded-xl bg-amber-100 p-3 text-sm text-amber-900">
+          <p className="mt-3 rounded-xl bg-amber-950/60 p-3 text-sm text-amber-200">
             Quedan pocos: {pocos.map((p) => `${p.nombre} (${p.existencias})`).join(", ")}
           </p>
         )}
@@ -46,14 +46,14 @@ export default async function PaginaProductos() {
           {productos?.map((p) => (
             <li
               key={p.id}
-              className={`rounded-xl border border-black/10 p-4 dark:border-white/15 ${p.activo ? "" : "opacity-50"}`}
+              className={`rounded-xl border border-borde bg-tarjeta p-4 ${p.activo ? "" : "opacity-50"}`}
             >
               <div className="flex items-start justify-between gap-2">
                 <div>
                   <p className="font-semibold">{p.nombre}</p>
                   <p className="text-sm">
                     {formatoPesos(Number(p.precio_venta))} ·{" "}
-                    <span className={p.existencias <= p.minimo_aviso ? "font-semibold text-amber-700" : ""}>
+                    <span className={p.existencias <= p.minimo_aviso ? "font-semibold text-amber-400" : ""}>
                       {p.existencias} unidad(es)
                     </span>
                     {!p.activo && " · desactivado"}
@@ -98,7 +98,7 @@ export default async function PaginaProductos() {
           ))}
         </ul>
         {!esDueno && (
-          <p className="mt-4 text-xs opacity-60">
+          <p className="mt-4 text-xs text-suave">
             Para vender un producto, ve a Ventas &gt; Registrar venta. Solo el dueño cambia precios y
             unidades.
           </p>

@@ -3,7 +3,7 @@ import { useActionState } from "react";
 import { crearProducto, type EstadoProducto } from "./acciones";
 
 const estiloCampo =
-  "w-full rounded-lg border border-black/20 bg-transparent p-3 dark:border-white/25";
+  "w-full rounded-lg border border-borde bg-transparent p-3";
 
 const inicial: EstadoProducto = {
   error: null,
@@ -20,11 +20,11 @@ export default function FormularioProducto() {
     <form
       key={estado.intento}
       action={accion}
-      className="space-y-3 rounded-xl border border-black/10 p-4 dark:border-white/15"
+      className="space-y-3 rounded-xl border border-borde bg-tarjeta p-4"
     >
       <h2 className="font-semibold">Agregar producto</h2>
-      {estado.error && <p className="rounded-lg bg-red-100 p-3 text-sm text-red-800">{estado.error}</p>}
-      {estado.exito && <p className="rounded-lg bg-green-100 p-3 text-sm text-green-800">{estado.exito}</p>}
+      {estado.error && <p className="rounded-lg bg-red-950/60 p-3 text-sm text-red-200">{estado.error}</p>}
+      {estado.exito && <p className="rounded-lg bg-emerald-950/60 p-3 text-sm text-emerald-200">{estado.exito}</p>}
       <input name="nombre" required placeholder="Nombre, ej. Cera mate" defaultValue={v.nombre} className={estiloCampo} />
       <label className="block text-sm">
         Precio de venta
@@ -51,7 +51,7 @@ export default function FormularioProducto() {
       </div>
       <button
         disabled={cargando}
-        className="w-full rounded-xl bg-black py-3 font-semibold text-white disabled:opacity-50 dark:bg-white dark:text-black"
+        className="w-full rounded-xl boton-plata py-3 font-semibold text-black disabled:opacity-50"
       >
         {cargando ? "Guardando…" : "Crear producto"}
       </button>

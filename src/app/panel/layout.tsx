@@ -1,8 +1,11 @@
 // Un "layout" envuelve todas las páginas de su carpeta. Este pone el menú
-// del panel arriba y revisa que quien entra sea parte del equipo.
-import Link from "next/link";
+// del panel (abajo en el celular, arriba en pantallas grandes) y revisa
+// que quien entra sea parte del equipo.
+import { LogOut } from "lucide-react";
+import { MarcaLogo } from "@/components/Logo";
 import { obtenerPerfil } from "@/lib/sesion";
 import { cerrarSesion } from "../ingresar/acciones";
+import NavPanel from "./NavPanel";
 
 export const dynamic = "force-dynamic";
 
@@ -14,7 +17,7 @@ export default async function LayoutPanel({ children }: { children: React.ReactN
     return (
       <main className="mx-auto max-w-sm px-4 py-16">
         <h1 className="text-xl font-bold">Tu cuenta no tiene acceso</h1>
-        <p className="mt-2 text-sm opacity-70">
+        <p className="mt-2 text-sm text-suave">
           {usuario.email} no está registrado como barbero activo. Pídele al dueño que revise tu
           perfil.
         </p>
@@ -28,23 +31,23 @@ export default async function LayoutPanel({ children }: { children: React.ReactN
   const esDueno = perfil.rol === "dueno";
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-6">
-      <header className="flex flex-wrap items-center justify-between gap-3 border-b border-black/10 pb-4 dark:border-white/15">
-        <div>
-          <p className="font-semibold">{perfil.nombre}</p>
-          <p className="text-xs opacity-70">{esDueno ? "Dueño" : "Barbero"}</p>
+    // pb-24: espacio abajo para que la barra del celular no tape el contenido.
+    <div className="mx-auto max-w-3xl px-4 pt-5 pb-24 md:pb-8">
+      <header className="flex flex-wrap items-center justify-between gap-3 border-b border-borde pb-4">
+        <div className="flex items-center gap-3">
+          <MarcaLogo className="h-10 w-10" />
+          <div>
+            <p className="font-semibold leading-tight">{perfil.nombre}</p>
+            <p className="text-xs text-suave">{esDueno ? "Dueño" : "Barbero"}</p>
+          </div>
         </div>
-        <nav className="flex flex-wrap items-center gap-4 text-sm">
-          <Link href="/panel">Agenda</Link>
-          <Link href="/panel/recordatorios">Recordatorios</Link>
-          <Link href="/panel/ventas">Ventas</Link>
-          <Link href="/panel/productos">Productos</Link>
-          {esDueno && <Link href="/panel/reportes">Reportes</Link>}
-          {esDueno && <Link href="/panel/barberos">Barberos</Link>}
-          <form action={cerrarSesion}>
-            <button className="opacity-70">Salir</button>
-          </form>
-        </nav>
+        <NavPanel esDueno={esDueno} />
+        <form action={cerrarSesion} className="hidden md:block">
+          <button className="flex items-center gap-1.5 text-sm text-suave hover:text-texto">
+            <LogOut size={16} />
+            Salir
+          </button>
+        </form>
       </header>
       <div className="py-6">{children}</div>
     </div>

@@ -7,8 +7,8 @@ import { fechaEnBogota, formatoFechaLarga, formatoHora, formatoPesos, hoyEnBogot
 import { columnasVenta, nombreFormaPago, ordenarLineas, type FormaPago, type Venta } from "@/lib/ventas";
 import { agregarProducto, anularVenta, cambiarFormaPago, cambiarPrecio } from "./acciones";
 
-const estiloCampo = "rounded-lg border border-black/20 bg-transparent p-2 text-sm dark:border-white/25";
-const estiloBoton = "rounded-lg border border-black/20 px-3 py-2 text-sm dark:border-white/25";
+const estiloCampo = "rounded-lg border border-borde bg-transparent p-2 text-sm";
+const estiloBoton = "rounded-lg border border-borde px-3 py-2 text-sm";
 
 export default async function PaginaVenta({
   params,
@@ -45,12 +45,12 @@ export default async function PaginaVenta({
       </Link>
 
       {aviso === "nueva" && (
-        <p className="mt-4 rounded-xl bg-green-100 p-4 text-sm text-green-900">Venta registrada.</p>
+        <p className="mt-4 rounded-xl bg-emerald-950/60 p-4 text-sm text-emerald-200">Venta registrada.</p>
       )}
-      {error && <p className="mt-4 rounded-xl bg-red-100 p-4 text-sm text-red-800">{error}</p>}
+      {error && <p className="mt-4 rounded-xl bg-red-950/60 p-4 text-sm text-red-200">{error}</p>}
 
-      <div className="mt-4 rounded-xl border border-black/10 p-4 dark:border-white/15">
-        <p className="text-sm opacity-70">
+      <div className="mt-4 rounded-xl border border-borde bg-tarjeta p-4">
+        <p className="text-sm text-suave">
           {formatoFechaLarga(venta.fecha_hora)}, {formatoHora(venta.fecha_hora)} · {venta.estilistas?.nombre}
         </p>
         {venta.clientes && <p className="mt-1 font-semibold">{venta.clientes.nombre}</p>}
@@ -89,7 +89,7 @@ export default async function PaginaVenta({
           ))}
         </ul>
 
-        <div className="mt-4 flex items-center justify-between border-t border-black/10 pt-3 text-lg font-bold dark:border-white/15">
+        <div className="mt-4 flex items-center justify-between border-t border-borde pt-3 text-lg font-bold">
           <span>Total</span>
           <span>{formatoPesos(Number(venta.total))}</span>
         </div>
@@ -114,7 +114,7 @@ export default async function PaginaVenta({
       {!!productos?.length && (
         <form
           action={agregarProducto.bind(null, venta.id)}
-          className="mt-6 space-y-2 rounded-xl border border-black/10 p-4 dark:border-white/15"
+          className="mt-6 space-y-2 rounded-xl border border-borde bg-tarjeta p-4"
         >
           <h2 className="font-semibold">Agregar producto</h2>
           <div className="flex flex-wrap gap-2">
@@ -145,14 +145,14 @@ export default async function PaginaVenta({
       {puedeAnular && (
         <form
           action={anularVenta.bind(null, venta.id, fecha)}
-          className="mt-6 space-y-2 rounded-xl border border-red-200 p-4"
+          className="mt-6 space-y-2 rounded-xl border border-red-900/70 p-4"
         >
-          <h2 className="font-semibold text-red-700">Anular venta</h2>
-          <p className="text-sm opacity-70">
+          <h2 className="font-semibold text-red-400">Anular venta</h2>
+          <p className="text-sm text-suave">
             Úsalo si se registró por error. Los productos vuelven al inventario
             {venta.cita_id ? " y la cita vuelve a Confirmada" : ""}.
           </p>
-          <button className="rounded-xl border border-red-600 px-4 py-3 text-sm font-semibold text-red-600">
+          <button className="rounded-xl border border-red-500/70 px-4 py-3 text-sm font-semibold text-red-400">
             Anular venta
           </button>
         </form>

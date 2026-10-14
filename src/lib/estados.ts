@@ -9,8 +9,8 @@ export const nombreEstado: Record<EstadoCita, string> = {
 };
 
 export const colorEstado: Record<EstadoCita, string> = {
-  confirmada: "bg-blue-100 text-blue-800",
-  atendida: "bg-green-100 text-green-800",
-  cancelada: "bg-red-100 text-red-800",
-  no_vino: "bg-amber-100 text-amber-800",
+  confirmada: "bg-zinc-700 text-zinc-100",
+  atendida: "bg-emerald-950/60 text-emerald-200",
+  cancelada: "bg-red-950/60 text-red-200",
+  no_vino: "bg-amber-950/60 text-amber-200",
 };
