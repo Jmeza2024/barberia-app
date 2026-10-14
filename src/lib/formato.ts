@@ -61,8 +61,13 @@ export function partesDeFecha(fecha: string) {
 // Enlace para abrir un chat de WhatsApp. Si el número tiene 10 dígitos
 // (celular de Colombia), le agrega el indicativo 57.
 export function enlaceWhatsApp(telefono: string) {
+  return `https://wa.me/${numeroInternacional(telefono)}`;
+}
+
+// "300 111 2233" -> "573001112233": solo dígitos y con el indicativo de Colombia.
+export function numeroInternacional(telefono: string) {
   const digitos = telefono.replace(/\D/g, "");
-  return `https://wa.me/${digitos.length === 10 ? `57${digitos}` : digitos}`;
+  return digitos.length === 10 ? `57${digitos}` : digitos;
 }
 
 // Enlace de WhatsApp con un mensaje ya escrito, listo para enviar.

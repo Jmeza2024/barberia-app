@@ -19,6 +19,8 @@ import {
   sumarDias,
 } from "@/lib/formato";
 import { colorEstado, nombreEstado, type EstadoCita } from "@/lib/estados";
+import { mensajeCambiada, mensajeCancelada } from "@/lib/mensajes";
+import { direccionSitio } from "@/lib/whatsapp";
 import { cambiarHora, cancelarCita, marcarEstado } from "./acciones";
 
 export const dynamic = "force-dynamic";
@@ -44,7 +46,7 @@ export default async function PaginaCitaEquipo({
   searchParams,
 }: {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ fecha?: string; barbero?: string; aviso?: string; error?: string }>;
+  searchParams: Promise<{ fecha?: string; barbero?: string; aviso?: string; error?: string; enviado?: string }>;
 }) {
   const { id } = await params;
   const parametros = await searchParams;
@@ -87,17 +89,20 @@ export default async function PaginaCitaEquipo({
       : Promise.resolve({ data: null }),
   ]);
 
-  // Mensajes listos para avisar al cliente por WhatsApp.
-  const primerNombre = cita.clientes.nombre.split(" ")[0];
-  // La dirección completa de la página pública de la cita (ej. https://mibarberia.com/cita/abc).
-  const encabezados = await headers();
-  const sitio = `${encabezados.get("x-forwarded-proto") ?? "http"}://${encabezados.get("host")}`;
-  const enlaceCita = `${sitio}/cita/${cita.codigo_cancelacion}`;
+  // Mensaje listo para avisar al cliente por WhatsApp (los textos están en src/lib/mensajes.ts).
+  const datosCita = {
+    cliente: cita.clientes.nombre,
+    servicio: cita.servicios.nombre,
+    barbero: cita.estilistas.nombre,
+    inicio: cita.inicio,
+    // La dirección completa de la página pública de la cita (ej. https://mibarberia.com/cita/abc).
+    enlace: `${direccionSitio(await headers())}/cita/${cita.codigo_cancelacion}`,
+  };
   const mensaje =
     parametros.aviso === "cancelada"
-      ? `Hola ${primerNombre}, te escribimos de la barbería. Lamentablemente tuvimos que cancelar tu cita de ${cita.servicios.nombre} del ${formatoFechaLarga(cita.inicio).toLowerCase()} a las ${formatoHora(cita.inicio)}. ¿Quieres que te agendemos otro día?`
+      ? mensajeCancelada(datosCita).texto
       : parametros.aviso === "cambiada"
-        ? `Hola ${primerNombre}, te escribimos de la barbería. Tu cita de ${cita.servicios.nombre} quedó para el ${formatoFechaLarga(cita.inicio).toLowerCase()} a las ${formatoHora(cita.inicio)} con ${cita.estilistas.nombre}. Puedes verla aquí: ${enlaceCita}`
+        ? mensajeCambiada(datosCita).texto
         : null;
 
   const dias = Array.from({ length: 15 }, (_, i) => sumarDias(hoyEnBogota(), i));
@@ -111,14 +116,21 @@ export default async function PaginaCitaEquipo({
       {mensaje && (
         <div className="mt-4 rounded-xl bg-green-100 p-4 text-sm text-green-900">
           <p className="font-semibold">
-            {parametros.aviso === "cancelada" ? "Cita cancelada." : "Cita cambiada."} Avísale al cliente:
+            {parametros.aviso === "cancelada" ? "Cita cancelada." : "Cita cambiada."}{" "}
+            {parametros.enviado === "1"
+              ? "Le avisamos al cliente por WhatsApp automáticamente."
+              : parametros.enviado === "0"
+                ? "El aviso automático no salió. Envíalo tú:"
+                : "Avísale al cliente:"}
           </p>
-          <a
-            href={enlaceWhatsAppConMensaje(cita.clientes.telefono, mensaje)}
-            className="mt-2 inline-block rounded-lg bg-green-700 px-4 py-2 font-semibold text-white"
-          >
-            Enviar aviso por WhatsApp
-          </a>
+          {parametros.enviado !== "1" && (
+            <a
+              href={enlaceWhatsAppConMensaje(cita.clientes.telefono, mensaje)}
+              className="mt-2 inline-block rounded-lg bg-green-700 px-4 py-2 font-semibold text-white"
+            >
+              Enviar aviso por WhatsApp
+            </a>
+          )}
         </div>
       )}
       {parametros.error === "ocupada" && (

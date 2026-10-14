@@ -36,6 +36,7 @@ export default async function LayoutPanel({ children }: { children: React.ReactN
         </div>
         <nav className="flex flex-wrap items-center gap-4 text-sm">
           <Link href="/panel">Agenda</Link>
+          <Link href="/panel/recordatorios">Recordatorios</Link>
           <Link href="/panel/ventas">Ventas</Link>
           <Link href="/panel/productos">Productos</Link>
           {esDueno && <Link href="/panel/reportes">Reportes</Link>}

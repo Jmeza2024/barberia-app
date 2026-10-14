@@ -51,11 +51,20 @@ export default async function PanelAgenda({
     .order("inicio");
   if (barbero) consulta = consulta.eq("estilista_id", barbero);
 
-  const [{ data: citas }, { data: barberos }] = await Promise.all([
+  const manana = sumarDias(hoy, 1);
+  const [{ data: citas }, { data: barberos }, { count: recordatoriosPendientes }] = await Promise.all([
     consulta.returns<CitaAgenda[]>(),
     esDueno
       ? supabase.from("estilistas").select("id, nombre").eq("activo", true).order("nombre")
       : Promise.resolve({ data: null }),
+    // Cuántas citas de mañana no tienen recordatorio todavía.
+    supabase
+      .from("citas")
+      .select("id", { count: "exact", head: true })
+      .eq("estado", "confirmada")
+      .eq("recordatorio_enviado", false)
+      .gte("inicio", `${manana}T00:00:00-05:00`)
+      .lt("inicio", `${sumarDias(manana, 1)}T00:00:00-05:00`),
   ]);
 
   const activas = citas?.filter((c) => c.estado !== "cancelada") ?? [];
@@ -83,6 +92,15 @@ export default async function PanelAgenda({
           + Nueva cita
         </Link>
       </div>
+
+      {!!recordatoriosPendientes && (
+        <Link
+          href="/panel/recordatorios"
+          className="mt-4 block rounded-xl bg-green-100 p-3 text-sm text-green-900"
+        >
+          Mañana hay {recordatoriosPendientes} cita(s) sin recordatorio. <strong>Enviar →</strong>
+        </Link>
+      )}
 
       {/* Cambiar de día */}
       <nav className="mt-4 flex items-center gap-2 text-sm">
