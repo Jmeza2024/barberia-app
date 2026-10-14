@@ -1,6 +1,6 @@
 // Página /panel/mas: en el celular, las opciones que no caben en la barra de abajo.
 import Link from "next/link";
-import { BarChart3, ChevronRight, LogOut, Package, Users } from "lucide-react";
+import { BarChart3, ChevronRight, LogOut, Package, Scissors, Users } from "lucide-react";
 import { obtenerPerfil } from "@/lib/sesion";
 import { cerrarSesion } from "../../ingresar/acciones";
 
@@ -14,8 +14,9 @@ export default async function PaginaMas() {
     { href: "/panel/productos", nombre: "Productos", detalle: "Precios y unidades", icono: Package },
     ...(esDueno
       ? [
+          { href: "/panel/servicios", nombre: "Servicios", detalle: "Nombres, precios y duración", icono: Scissors },
           { href: "/panel/reportes", nombre: "Reportes", detalle: "Ganancias y comisiones", icono: BarChart3 },
-          { href: "/panel/barberos", nombre: "Barberos", detalle: "Perfiles y comisión", icono: Users },
+          { href: "/panel/barberos", nombre: "Barberos", detalle: "Nombres, comisión, borrar", icono: Users },
         ]
       : []),
   ];
