@@ -6,6 +6,7 @@ import { crearClienteServidor } from "@/lib/supabase/server";
 import { formatoFechaLarga, formatoHora, formatoPesos } from "@/lib/formato";
 import { cancelarCita } from "./acciones";
 import { nombreEstado, type EstadoCita } from "@/lib/estados";
+import FondoFoto from "@/components/FondoFoto";
 
 export const dynamic = "force-dynamic";
 
@@ -32,6 +33,7 @@ export default async function PaginaCita({
   if (!cita) {
     return (
       <main className="mx-auto max-w-md px-4 py-10">
+        <FondoFoto />
         <h1 className="text-2xl font-bold">No encontramos esta cita</h1>
         <Link href="/" className="mt-4 inline-block underline">
           Volver al inicio
@@ -44,6 +46,7 @@ export default async function PaginaCita({
 
   return (
     <main className="mx-auto max-w-md px-4 py-10">
+      <FondoFoto />
       {cita.estado === "confirmada" && (
         <span className="flex h-14 w-14 items-center justify-center rounded-full bg-white text-black">
           <Check size={30} strokeWidth={3} />

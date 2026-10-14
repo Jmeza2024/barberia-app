@@ -5,6 +5,7 @@ import { crearClienteServidor } from "@/lib/supabase/server";
 import { CalendarPlus, ChevronDown, Clock, MapPin, MessageCircle, Scissors } from "lucide-react";
 import Adorno from "@/components/Adorno";
 import { enlaceWhatsApp, formatoPesos } from "@/lib/formato";
+import FondoFoto from "@/components/FondoFoto";
 
 // Le dice a Next.js que vuelva a pedir los datos en cada visita,
 // para que un cambio de precio se vea de inmediato.
@@ -46,6 +47,7 @@ export default async function Inicio() {
 
   return (
     <main className="pb-12">
+      <FondoFoto />
       {/* Portada: ocupa casi toda la pantalla, con rayos de luz de fondo */}
       <header className="relative overflow-hidden">
         <div className="rayos absolute inset-0" aria-hidden />

@@ -19,7 +19,7 @@ Si mañana el dueño quiere el negro un poco más claro, cambias **un** número 
 Tailwind crea las clases `bg-fondo`, `text-suave`, etc. a partir de esos nombres.
 
 El blanco se usa solo para lo importante: el texto, los precios y el botón
-principal de cada pantalla (`bg-white text-black`).
+principal de cada pantalla (`boton-plata`).
 
 La app siempre está en modo oscuro: `color-scheme: dark` le dice al navegador
 que también pinte oscuros los campos de fecha, las barras de desplazamiento, etc.
@@ -40,15 +40,15 @@ También hay tres clases propias, creadas con `@utility`:
 - `texto-plata`: texto que va de blanco a gris. Todos los `h1` lo usan.
 - `rayos`: los rayos de la portada.
 
-**¿Quieres una foto de la barbería de fondo?** Guarda la foto como
-`public/portada.jpg`. Luego, en `src/app/page.tsx`, busca
-`<div className="rayos absolute inset-0" aria-hidden />` y cámbialo por:
+**La foto de fondo.** Las páginas que ven los clientes (inicio, reservar, cita
+e ingreso) tienen de fondo la foto de la barbería: `public/fondo-barberia.jpg`.
+La pone el componente `src/components/FondoFoto.tsx` con `position: fixed`,
+así la foto se queda quieta y el contenido pasa por encima al bajar.
+Encima lleva una capa negra (`from-black/55 ... to-black/85`) para que el texto se lea.
 
-```tsx
-<div className="absolute inset-0 bg-[url(/portada.jpg)] bg-cover bg-center opacity-40 grayscale" aria-hidden />
-```
-
-`grayscale` la pone en blanco y negro y `opacity-40` la oscurece para que el texto se lea.
+Para cambiar la foto, reemplaza `public/fondo-barberia.jpg` por otra con el mismo
+nombre. Mientras más grande sea (por ejemplo, 1500 px de ancho), más nítida se verá
+en el computador.
 
 ## 2. Las letras
 
