@@ -1,11 +1,8 @@
-// Busca las citas confirmadas de un día que aún no tienen recordatorio y,
-// si WhatsApp Business está configurado, se los envía.
-// Lo usan el envío automático diario (api/recordatorios) y el botón
-// "Enviar todos" de la página de recordatorios.
-import "server-only";
+// Las citas confirmadas de un día, con el mensaje de recordatorio de cada una.
+// Si algún día se agrega el envío automático (WhatsApp Business), puede
+// reusar estas mismas funciones.
 import { sumarDias } from "./formato";
 import { mensajeRecordatorio } from "./mensajes";
-import { enviarPlantilla } from "./whatsapp";
 import type { crearClienteServidor } from "./supabase/server";
 
 type Cliente = Pick<Awaited<ReturnType<typeof crearClienteServidor>>, "from">;
@@ -43,22 +40,4 @@ export function mensajeDe(cita: CitaRecordatorio, sitio: string) {
     inicio: cita.inicio,
     enlace: `${sitio}/cita/${cita.codigo_cancelacion}`,
   });
-}
-
-// Envía los que faltan. Devuelve cuántos salieron y cuántos fallaron.
-export async function enviarRecordatoriosDelDia(supabase: Cliente, fecha: string, sitio: string) {
-  const pendientes = (await citasDelDia(supabase, fecha)).filter((c) => !c.recordatorio_enviado && c.clientes);
-  let enviados = 0;
-  let fallidos = 0;
-  for (const cita of pendientes) {
-    const ok = await enviarPlantilla(cita.clientes!.telefono, mensajeDe(cita, sitio));
-    if (ok) {
-      // Se marca para no enviarlo dos veces.
-      await supabase.from("citas").update({ recordatorio_enviado: true }).eq("id", cita.id);
-      enviados++;
-    } else {
-      fallidos++;
-    }
-  }
-  return { enviados, fallidos };
 }

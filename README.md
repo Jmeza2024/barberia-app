@@ -44,8 +44,7 @@ Hecha con **Next.js** (pantallas y lógica), **Supabase** (base de datos y login
 | `src/app/panel/` | El panel del dueño y los barberos: agenda, citas, recordatorios, ventas, productos, reportes y barberos. |
 | `src/lib/ventas.ts` | Sumas de ventas por día, por barbero y por forma de pago. |
 | `src/lib/periodos.ts` y `src/lib/reportes.ts` | Periodos (día, semana, mes) y el cálculo de la comisión. |
-| `src/lib/mensajes.ts` y `src/lib/whatsapp.ts` | Los textos para los clientes y el envío automático por WhatsApp Business. |
-| `vercel.json` | La tarea diaria que envía los recordatorios de mañana. |
+| `src/lib/mensajes.ts` | Los textos de WhatsApp para los clientes (recordatorio, cancelación, cambio). |
 | `src/lib/estados.ts` | Nombres y colores de los estados de una cita. |
 | `src/middleware.ts` | Protege el panel: sin sesión manda a `/ingresar`. |
 | `src/lib/sesion.ts` | Quién está conectado y si es dueño. |

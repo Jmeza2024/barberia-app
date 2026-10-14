@@ -20,7 +20,7 @@ import {
 } from "@/lib/formato";
 import { colorEstado, nombreEstado, type EstadoCita } from "@/lib/estados";
 import { mensajeCambiada, mensajeCancelada } from "@/lib/mensajes";
-import { direccionSitio } from "@/lib/whatsapp";
+import { direccionSitio } from "@/lib/sitio";
 import { cambiarHora, cancelarCita, marcarEstado } from "./acciones";
 
 export const dynamic = "force-dynamic";
@@ -46,7 +46,7 @@ export default async function PaginaCitaEquipo({
   searchParams,
 }: {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ fecha?: string; barbero?: string; aviso?: string; error?: string; enviado?: string }>;
+  searchParams: Promise<{ fecha?: string; barbero?: string; aviso?: string; error?: string }>;
 }) {
   const { id } = await params;
   const parametros = await searchParams;
@@ -116,21 +116,14 @@ export default async function PaginaCitaEquipo({
       {mensaje && (
         <div className="mt-4 rounded-xl bg-green-100 p-4 text-sm text-green-900">
           <p className="font-semibold">
-            {parametros.aviso === "cancelada" ? "Cita cancelada." : "Cita cambiada."}{" "}
-            {parametros.enviado === "1"
-              ? "Le avisamos al cliente por WhatsApp automáticamente."
-              : parametros.enviado === "0"
-                ? "El aviso automático no salió. Envíalo tú:"
-                : "Avísale al cliente:"}
+            {parametros.aviso === "cancelada" ? "Cita cancelada." : "Cita cambiada."} Avísale al cliente:
           </p>
-          {parametros.enviado !== "1" && (
-            <a
-              href={enlaceWhatsAppConMensaje(cita.clientes.telefono, mensaje)}
-              className="mt-2 inline-block rounded-lg bg-green-700 px-4 py-2 font-semibold text-white"
-            >
-              Enviar aviso por WhatsApp
-            </a>
-          )}
+          <a
+            href={enlaceWhatsAppConMensaje(cita.clientes.telefono, mensaje)}
+            className="mt-2 inline-block rounded-lg bg-green-700 px-4 py-2 font-semibold text-white"
+          >
+            Enviar aviso por WhatsApp
+          </a>
         </div>
       )}
       {parametros.error === "ocupada" && (

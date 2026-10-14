@@ -1,8 +1,8 @@
-// Los textos que se le envían al cliente por WhatsApp. Están en un solo
-// lugar para que el botón manual y el envío automático digan lo mismo.
+// Los textos que se le envían al cliente por WhatsApp, en un solo lugar.
 //
-// Cada mensaje tiene "datos" en orden ({{1}}, {{2}}...). Así es como Meta
-// pide las plantillas: el texto fijo se aprueba una vez y los datos cambian.
+// Cada mensaje guarda también sus "datos" en orden y un nombre. No se usan
+// todavía: son lo que pide Meta si algún día el dueño quiere que los
+// mensajes salgan solos (WhatsApp Business), así no hay que reescribirlos.
 import { formatoFechaLarga, formatoHora } from "./formato";
 
 export type DatosCita = {

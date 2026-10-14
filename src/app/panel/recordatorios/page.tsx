@@ -12,8 +12,8 @@ import {
   sumarDias,
 } from "@/lib/formato";
 import { citasDelDia, mensajeDe } from "@/lib/recordatorios";
-import { direccionSitio, whatsappConfigurado } from "@/lib/whatsapp";
-import { abrirRecordatorio, enviarTodos, marcarPendiente } from "./acciones";
+import { direccionSitio } from "@/lib/sitio";
+import { abrirRecordatorio, marcarPendiente } from "./acciones";
 
 const esFecha = (texto?: string) => !!texto && /^\d{4}-\d{2}-\d{2}$/.test(texto);
 const estiloBotonDia = "rounded-lg border border-black/15 px-3 py-2 dark:border-white/20";
@@ -21,7 +21,7 @@ const estiloBotonDia = "rounded-lg border border-black/15 px-3 py-2 dark:border-
 export default async function PaginaRecordatorios({
   searchParams,
 }: {
-  searchParams: Promise<{ fecha?: string; enviados?: string; fallidos?: string }>;
+  searchParams: Promise<{ fecha?: string }>;
 }) {
   const parametros = await searchParams;
   const { supabase, perfil } = await obtenerPerfil();
@@ -32,7 +32,6 @@ export default async function PaginaRecordatorios({
   const citas = await citasDelDia(supabase, fecha);
   const pendientes = citas.filter((c) => !c.recordatorio_enviado);
   const sitio = direccionSitio(await headers());
-  const automatico = whatsappConfigurado();
 
   return (
     <section className="max-w-xl">
@@ -56,35 +55,10 @@ export default async function PaginaRecordatorios({
         </Link>
       </nav>
 
-      {parametros.enviados !== undefined && (
-        <p className="mt-4 rounded-xl bg-green-100 p-4 text-sm text-green-900">
-          Se enviaron {parametros.enviados} recordatorio(s).
-          {Number(parametros.fallidos) > 0 &&
-            ` ${parametros.fallidos} no salieron: envíalos con su botón.`}
-        </p>
-      )}
-
-      {automatico ? (
-        <div className="mt-4 rounded-xl border border-black/10 p-4 text-sm dark:border-white/15">
-          <p>
-            <strong>Envío automático encendido.</strong> Todos los días a las 5:00 p. m. se envían solos
-            los recordatorios de mañana.
-          </p>
-          {pendientes.length > 0 && (
-            <form action={enviarTodos.bind(null, fecha)} className="mt-3">
-              <button className="rounded-xl bg-green-700 px-4 py-3 font-semibold text-white">
-                Enviar los {pendientes.length} que faltan ahora
-              </button>
-            </form>
-          )}
-        </div>
-      ) : (
-        <p className="mt-4 text-sm opacity-70">
-          Toca <strong>Enviar</strong> en cada cita: se abre WhatsApp con el mensaje listo y la cita
-          queda marcada como recordada.
-          {esDueno && " Para que salgan solos, mira docs/aprende-etapa-8.md."}
-        </p>
-      )}
+      <p className="mt-4 text-sm opacity-70">
+        Toca <strong>Enviar</strong> en cada cita: se abre WhatsApp con el mensaje listo y la cita queda
+        marcada como recordada.
+      </p>
 
       {citas.length === 0 ? (
         <p className="mt-6 text-sm opacity-70">No hay citas confirmadas ese día.</p>
