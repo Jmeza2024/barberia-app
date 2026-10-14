@@ -12,6 +12,7 @@ import {
   Ellipsis,
   Package,
   Receipt,
+  Scissors,
   Users,
   type LucideIcon,
 } from "lucide-react";
@@ -31,6 +32,7 @@ export default function NavPanel({ esDueno }: { esDueno: boolean }) {
     { href: "/panel/productos", nombre: "Productos", icono: Package },
     ...(esDueno
       ? [
+          { href: "/panel/servicios", nombre: "Servicios", icono: Scissors },
           { href: "/panel/reportes", nombre: "Reportes", icono: BarChart3 },
           { href: "/panel/barberos", nombre: "Barberos", icono: Users },
         ]

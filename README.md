@@ -43,6 +43,8 @@ Hecha con **Next.js** (pantallas y lógica), **Supabase** (base de datos y login
 | `src/app/ingresar/` | El login del equipo. |
 | `src/app/panel/` | El panel del dueño y los barberos: agenda, citas, recordatorios, ventas, productos, reportes y barberos. |
 | `src/app/panel/NavPanel.tsx` | El menú del panel: barra abajo en el celular, fila arriba en el computador. |
+| `src/app/panel/servicios/` | Solo el dueño: cambiar nombre, precio y duración de los servicios, crear, ocultar o borrar. |
+| `src/components/` | Piezas que se repiten: el logo, la foto de fondo, el aviso y el botón que pide confirmar. |
 | `src/app/panel/mas/` | La pantalla "Más" del celular: Productos, Reportes, Barberos y Salir. |
 | `src/app/globals.css` | Los colores de la app (negro, gris, blanco) en un solo lugar. |
 | `src/app/manifest.ts` y `src/app/icon.svg` | Nombre e ícono para "Agregar a pantalla de inicio". |

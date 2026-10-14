@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { exigirDueno } from "@/lib/sesion";
 import { crearClienteAdmin } from "@/lib/supabase/admin";
 
@@ -97,11 +98,54 @@ export async function cambiarActivo(id: string, activo: boolean) {
   revalidatePath("/panel/barberos");
 }
 
-export async function cambiarComision(id: string, datos: FormData) {
+// Para mostrar un mensaje en la página después de guardar o borrar.
+function volver(aviso: string): never {
+  redirect(`/panel/barberos?aviso=${encodeURIComponent(aviso)}`);
+}
+
+// Guarda el nombre y la comisión de un barbero.
+export async function guardarBarbero(id: string, datos: FormData) {
   const { supabase } = await exigirDueno();
+  const nombre = String(datos.get("nombre") ?? "").trim();
   const comision = Number(datos.get("comision"));
-  if (comision >= 0 && comision <= 100) {
-    await supabase.from("estilistas").update({ porcentaje_comision: comision }).eq("id", id);
+  if (nombre.length < 2) volver("Escribe un nombre de al menos 2 letras");
+  if (!(comision >= 0 && comision <= 100)) volver("La comisión debe estar entre 0 y 100");
+
+  const { error } = await supabase
+    .from("estilistas")
+    .update({ nombre, porcentaje_comision: comision })
+    .eq("id", id);
+  if (error) volver(`No se pudo guardar: ${error.message}`);
+  // "layout" actualiza todo el panel: el nombre sale también en la agenda y arriba.
+  revalidatePath("/panel", "layout");
+  volver(`Se guardaron los cambios de ${nombre}`);
+}
+
+// Borra un barbero y su cuenta. Solo se puede si no tiene citas ni ventas:
+// esas quedan guardadas para los reportes. Si ya tiene, se desactiva.
+export async function borrarBarbero(id: string) {
+  const { supabase, perfil } = await exigirDueno();
+  if (id === perfil?.id) volver("No te puedes borrar a ti mismo");
+
+  const { data: barbero } = await supabase
+    .from("estilistas")
+    .select("nombre, usuario_id")
+    .eq("id", id)
+    .single();
+  if (!barbero) volver("Ese barbero no existe");
+
+  const { error } = await supabase.from("estilistas").delete().eq("id", id);
+  if (error) {
+    // 23503 = otra tabla (citas o ventas) todavía apunta a este barbero.
+    volver(
+      error.code === "23503"
+        ? `${barbero.nombre} tiene citas o ventas guardadas y no se puede borrar. Toca "Desactivar": deja de salir para reservar y sus reportes se conservan.`
+        : `No se pudo borrar: ${error.message}`,
+    );
   }
-  revalidatePath("/panel/barberos");
+
+  // También borramos su cuenta, para que ya no pueda entrar.
+  if (barbero.usuario_id) await crearClienteAdmin().auth.admin.deleteUser(barbero.usuario_id);
+  revalidatePath("/panel", "layout");
+  volver(`${barbero.nombre} fue borrado`);
 }
