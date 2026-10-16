@@ -21,6 +21,7 @@ type CitaAgenda = {
   inicio: string;
   fin: string;
   estado: EstadoCita;
+  gratis: boolean;
   nota: string | null;
   servicios: { nombre: string } | null;
   clientes: { nombre: string; telefono: string } | null;
@@ -45,7 +46,7 @@ export default async function PanelAgenda({
   let consulta = supabase
     .from("citas")
     .select(
-      "id, inicio, fin, estado, nota, servicios(nombre), clientes(nombre, telefono), estilistas(id, nombre)",
+      "id, inicio, fin, estado, gratis, nota, servicios(nombre), clientes(nombre, telefono), estilistas(id, nombre)",
     )
     .gte("inicio", `${fecha}T00:00:00-05:00`)
     .lt("inicio", `${sumarDias(fecha, 1)}T00:00:00-05:00`)
@@ -171,6 +172,9 @@ export default async function PanelAgenda({
                 <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${colorEstado[cita.estado]}`}>
                   {nombreEstado[cita.estado]}
                 </span>
+                {cita.gratis && (
+                  <span className="rounded-full bg-white px-2 py-0.5 text-xs font-semibold text-black">🎁 Gratis</span>
+                )}
                 {cita.clientes && (
                   <a href={enlaceWhatsApp(cita.clientes.telefono)} className="text-xs underline">
                     WhatsApp

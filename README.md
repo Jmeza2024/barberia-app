@@ -40,6 +40,7 @@ Hecha con **Next.js** (pantallas y lógica), **Supabase** (base de datos y login
 | `src/app/page.tsx` | La página de inicio con los servicios y precios. |
 | `src/app/reservar/` | La reserva de citas en 4 pasos. |
 | `src/app/cita/[codigo]/` | La página de cada cita, para verla o cancelarla. |
+| `src/app/tarjeta/` | La tarjeta de cortes del cliente: 10 cortes y el siguiente gratis. |
 | `src/app/ingresar/` | El login del equipo. |
 | `src/app/panel/` | El panel del dueño y los barberos: agenda, citas, recordatorios, ventas, productos, reportes y barberos. |
 | `src/app/panel/NavPanel.tsx` | El menú del panel: barra abajo en el celular, fila arriba en el computador. |

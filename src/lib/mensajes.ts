@@ -48,3 +48,13 @@ export function mensajeCambiada(c: DatosCita): Plantilla {
     texto: `Hola ${datos[0]}, tu cita de ${datos[1]} quedó para el ${datos[2]} a las ${datos[3]} con ${datos[4]}. Puedes verla aquí: ${datos[5]}`,
   };
 }
+
+// Cuando el cliente completa su tarjeta de cortes.
+export function mensajePremio(c: { cliente: string; meta: number; enlaceReservar: string }): Plantilla {
+  const datos = [primerNombre(c.cliente), String(c.meta), c.enlaceReservar];
+  return {
+    nombre: "corte_gratis",
+    datos,
+    texto: `¡Felicitaciones ${datos[0]}! Completaste tus ${datos[1]} cortes: tu próximo corte es GRATIS. Reserva cuando quieras aquí: ${datos[2]}`,
+  };
+}

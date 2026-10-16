@@ -2,7 +2,7 @@
 // servidor, pide los datos a Supabase y envía el HTML ya listo al celular.
 import Link from "next/link";
 import { crearClienteServidor } from "@/lib/supabase/server";
-import { CalendarPlus, ChevronDown, Clock, MapPin, MessageCircle } from "lucide-react";
+import { CalendarPlus, ChevronDown, Clock, Gift, MapPin, MessageCircle } from "lucide-react";
 import Adorno from "@/components/Adorno";
 import Logo from "@/components/Logo";
 import { enlaceWhatsApp, formatoHoraSola, formatoPesos } from "@/lib/formato";
@@ -26,7 +26,7 @@ export default async function Inicio() {
   const [{ data: negocio }, { data: servicios, error }] = await Promise.all([
     supabase
       .from("negocio")
-      .select("nombre, direccion, telefono_whatsapp, hora_apertura, hora_cierre")
+      .select("nombre, direccion, telefono_whatsapp, hora_apertura, hora_cierre, cortes_para_premio")
       .single(),
     supabase
       .from("servicios")
@@ -91,6 +91,11 @@ export default async function Inicio() {
               )}
             </div>
           )}
+
+          <Link href="/tarjeta" className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl border border-zinc-600/60 bg-black/30 py-3 text-sm backdrop-blur">
+            <Gift size={18} />
+            Mi tarjeta: {negocio?.cortes_para_premio ?? 10} cortes y el siguiente gratis
+          </Link>
 
           <ChevronDown size={22} className="mt-10 animate-bounce text-suave" aria-hidden />
         </div>
