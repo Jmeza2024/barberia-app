@@ -19,7 +19,8 @@ import {
   sumarDias,
 } from "@/lib/formato";
 import { colorEstado, nombreEstado, type EstadoCita } from "@/lib/estados";
-import { mensajeCambiada, mensajeCancelada } from "@/lib/mensajes";
+import { mensajeCambiada, mensajeCancelada, mensajePremio } from "@/lib/mensajes";
+import TarjetaSellos, { type Tarjeta } from "@/components/TarjetaSellos";
 import { direccionSitio } from "@/lib/sitio";
 import { cambiarHora, cancelarCita, marcarEstado } from "./acciones";
 
@@ -33,6 +34,8 @@ type Cita = {
   nota: string | null;
   motivo_cancelacion: string | null;
   codigo_cancelacion: string;
+  gratis: boolean;
+  cliente_id: string;
   servicios: { id: string; nombre: string; precio: number; duracion_min: number } | null;
   clientes: { nombre: string; telefono: string } | null;
   estilistas: { id: string; nombre: string } | null;
@@ -56,7 +59,7 @@ export default async function PaginaCitaEquipo({
   const { data: cita } = await supabase
     .from("citas")
     .select(
-      "id, inicio, fin, estado, nota, motivo_cancelacion, codigo_cancelacion, servicios(id, nombre, precio, duracion_min), clientes(nombre, telefono), estilistas(id, nombre)",
+      "id, inicio, fin, estado, nota, motivo_cancelacion, codigo_cancelacion, gratis, cliente_id, servicios(id, nombre, precio, duracion_min), clientes(nombre, telefono), estilistas(id, nombre)",
     )
     .eq("id", id)
     .maybeSingle<Cita>();
@@ -71,7 +74,7 @@ export default async function PaginaCitaEquipo({
   const fechaNueva = confirmada && esFecha(parametros.fecha) ? parametros.fecha! : null;
   const barberoNuevo = (esDueno && parametros.barbero) || cita.estilistas.id;
 
-  const [{ data: horas }, { data: barberos }, { data: venta }] = await Promise.all([
+  const [{ data: horas }, { data: barberos }, { data: venta }, { data: datosTarjeta }, { data: negocio }] = await Promise.all([
     fechaNueva
       ? supabase.rpc("horas_libres_equipo", {
           p_servicio: cita.servicios.id,
@@ -87,8 +90,13 @@ export default async function PaginaCitaEquipo({
     cita.estado === "atendida"
       ? supabase.from("ventas").select("id").eq("cita_id", cita.id).maybeSingle()
       : Promise.resolve({ data: null }),
+    // La tarjeta de cortes del cliente.
+    supabase.rpc("tarjeta_de", { p_cliente: cita.cliente_id }),
+    supabase.from("negocio").select("cortes_para_premio").single(),
   ]);
+  const tarjeta = (datosTarjeta as Tarjeta[] | null)?.[0];
 
+  const sitio = direccionSitio(await headers());
   // Mensaje listo para avisar al cliente por WhatsApp (los textos están en src/lib/mensajes.ts).
   const datosCita = {
     cliente: cita.clientes.nombre,
@@ -96,10 +104,16 @@ export default async function PaginaCitaEquipo({
     barbero: cita.estilistas.nombre,
     inicio: cita.inicio,
     // La dirección completa de la página pública de la cita (ej. https://mibarberia.com/cita/abc).
-    enlace: `${direccionSitio(await headers())}/cita/${cita.codigo_cancelacion}`,
+    enlace: `${sitio}/cita/${cita.codigo_cancelacion}`,
   };
   const mensaje =
-    parametros.aviso === "cancelada"
+    parametros.aviso === "premio"
+      ? mensajePremio({
+          cliente: cita.clientes.nombre,
+          meta: negocio?.cortes_para_premio ?? 10,
+          enlaceReservar: `${sitio}/reservar`,
+        }).texto
+      : parametros.aviso === "cancelada"
       ? mensajeCancelada(datosCita).texto
       : parametros.aviso === "cambiada"
         ? mensajeCambiada(datosCita).texto
@@ -116,7 +130,9 @@ export default async function PaginaCitaEquipo({
       {mensaje && (
         <div className="mt-4 rounded-xl bg-emerald-950/60 p-4 text-sm text-emerald-200">
           <p className="font-semibold">
-            {parametros.aviso === "cancelada" ? "Cita cancelada." : "Cita cambiada."} Avísale al cliente:
+            {parametros.aviso === "premio"
+              ? `🎉 ¡${cita.clientes.nombre} completó su tarjeta! Su próximo corte es gratis. Avísale:`
+              : `${parametros.aviso === "cancelada" ? "Cita cancelada." : "Cita cambiada."} Avísale al cliente:`}
           </p>
           <a
             href={enlaceWhatsAppConMensaje(cita.clientes.telefono, mensaje)}
@@ -142,7 +158,15 @@ export default async function PaginaCitaEquipo({
           {cita.clientes.telefono} · WhatsApp
         </a>
         <p className="mt-3">
-          {cita.servicios.nombre} · {formatoPesos(cita.servicios.precio)}
+          {cita.servicios.nombre} ·{" "}
+          {cita.gratis ? (
+            <>
+              <span className="text-suave line-through">{formatoPesos(cita.servicios.precio)}</span>{" "}
+              <strong>Gratis 🎁</strong>
+            </>
+          ) : (
+            formatoPesos(cita.servicios.precio)
+          )}
         </p>
         <p>
           {formatoFechaLarga(cita.inicio)}, {formatoHora(cita.inicio)} – {formatoHora(cita.fin)}
@@ -153,6 +177,19 @@ export default async function PaginaCitaEquipo({
           <p className="mt-2 text-sm text-red-400">Motivo: {cita.motivo_cancelacion}</p>
         )}
       </div>
+
+      {/* Tarjeta de cortes del cliente */}
+      {tarjeta && (
+        <div className="mt-4 rounded-xl border border-borde bg-tarjeta p-4">
+          <p className="mb-3 text-xs font-semibold tracking-widest text-suave uppercase">
+            Tarjeta de cortes · {tarjeta.gratis_disponibles > 0 ? tarjeta.meta : tarjeta.sellos} de {tarjeta.meta}
+          </p>
+          <TarjetaSellos tarjeta={tarjeta} pequena />
+          {cita.gratis && confirmada && (
+            <p className="mt-3 text-sm">Esta cita es su corte gratis: al marcarla Atendida, la venta queda en $0.</p>
+          )}
+        </div>
+      )}
 
       {/* Atender: solo citas confirmadas */}
       {confirmada && (

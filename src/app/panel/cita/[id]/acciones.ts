@@ -9,8 +9,22 @@ import { crearClienteServidor } from "@/lib/supabase/server";
 
 export async function marcarEstado(id: string, estado: "atendida" | "no_vino" | "confirmada") {
   const supabase = await crearClienteServidor();
-  await supabase.from("citas").update({ estado }).eq("id", id);
+  const { data: cita } = await supabase
+    .from("citas")
+    .update({ estado })
+    .eq("id", id)
+    .select("cliente_id, gratis")
+    .maybeSingle();
   revalidatePath(`/panel/cita/${id}`);
+
+  // ¿Con este corte completó la tarjeta? Entonces mostramos el botón para avisarle.
+  if (estado === "atendida" && cita && !cita.gratis) {
+    const { data } = await supabase.rpc("tarjeta_de", { p_cliente: cita.cliente_id });
+    const tarjeta = (data as { sellos: number; gratis_disponibles: number }[] | null)?.[0];
+    if (tarjeta && tarjeta.sellos === 0 && tarjeta.gratis_disponibles > 0) {
+      redirect(`/panel/cita/${id}?aviso=premio`);
+    }
+  }
 }
 
 export async function cancelarCita(id: string, datos: FormData) {

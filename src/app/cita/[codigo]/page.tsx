@@ -1,7 +1,8 @@
 // Página /cita/[codigo]. Los corchetes significan que esa parte de la
 // dirección cambia: /cita/abc123 muestra la cita con código "abc123".
 import Link from "next/link";
-import { CalendarDays, Check, Scissors, User } from "lucide-react";
+import { CalendarDays, Check, Gift, Scissors, User } from "lucide-react";
+import TarjetaSellos from "@/components/TarjetaSellos";
 import { crearClienteServidor } from "@/lib/supabase/server";
 import { formatoFechaLarga, formatoHora, formatoPesos } from "@/lib/formato";
 import { cancelarCita } from "./acciones";
@@ -18,6 +19,10 @@ type Cita = {
   inicio: string;
   fin: string;
   estado: EstadoCita;
+  gratis: boolean;
+  sellos: number;
+  meta: number;
+  gratis_disponibles: number;
 };
 
 export default async function PaginaCita({
@@ -66,7 +71,14 @@ export default async function PaginaCita({
             <Scissors size={18} className="text-suave" />
             {cita.servicio}
           </span>
-          {formatoPesos(cita.precio)}
+          {cita.gratis ? (
+            <span className="flex flex-col items-end">
+              <span className="text-sm text-suave line-through">{formatoPesos(cita.precio)}</span>
+              <span>Gratis</span>
+            </span>
+          ) : (
+            formatoPesos(cita.precio)
+          )}
         </p>
         <p className="flex items-center gap-2">
           <User size={18} className="text-suave" />
@@ -77,6 +89,19 @@ export default async function PaginaCita({
           {formatoFechaLarga(cita.inicio)}, {formatoHora(cita.inicio)}
         </p>
       </div>
+
+      {cita.gratis && cita.estado === "confirmada" && (
+        <p className="boton-plata mt-4 flex items-center justify-center gap-2 rounded-xl py-3 font-semibold">
+          <Gift size={18} />
+          ¡Este corte es gratis por tu tarjeta!
+        </p>
+      )}
+
+      {/* La tarjeta de cortes del cliente */}
+      <section className="mt-6 rounded-xl border border-borde bg-tarjeta p-4">
+        <p className="mb-3 text-xs font-semibold tracking-widest text-suave uppercase">Tu tarjeta de cortes</p>
+        <TarjetaSellos tarjeta={cita} pequena />
+      </section>
 
       {sePuedeCancelar && (
         // .bind() le pasa el código a la acción cuando se presiona el botón.
