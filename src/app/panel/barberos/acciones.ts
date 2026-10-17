@@ -67,19 +67,17 @@ export async function crearBarbero(
     return fallo(`No se pudo crear el barbero: ${errorFicha?.message}`);
   }
 
-  // 3. Por defecto hace todos los servicios y trabaja de lunes a sábado, 9 a. m. a 9 p. m.
-  //    El dueño lo podrá ajustar después.
+  // 3. Por defecto hace todos los servicios y trabaja de lunes a sábado,
+  //    de 8 a 12 y de 1 a 8 p. m. (descansa de 12 a 1).
   const { data: servicios } = await supabase.from("servicios").select("id");
   await supabase
     .from("estilista_servicios")
     .insert((servicios ?? []).map((s) => ({ estilista_id: barbero.id, servicio_id: s.id })));
   await supabase.from("horarios").insert(
-    [1, 2, 3, 4, 5, 6].map((dia) => ({
-      estilista_id: barbero.id,
-      dia_semana: dia,
-      hora_inicio: "09:00",
-      hora_fin: "21:00",
-    })),
+    [1, 2, 3, 4, 5, 6].flatMap((dia) => [
+      { estilista_id: barbero.id, dia_semana: dia, hora_inicio: "08:00", hora_fin: "12:00" },
+      { estilista_id: barbero.id, dia_semana: dia, hora_inicio: "13:00", hora_fin: "20:00" },
+    ]),
   );
 
   revalidatePath("/panel/barberos");
