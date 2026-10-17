@@ -1,10 +1,9 @@
 // Página /reservar. El servidor trae los servicios y los barberos, y se los
 // pasa al componente <Reserva>, que corre en el celular y maneja los pasos.
-import Link from "next/link";
-import { ChevronLeft } from "lucide-react";
 import { crearClienteServidor } from "@/lib/supabase/server";
 import Reserva from "./Reserva";
 import FondoFoto from "@/components/FondoFoto";
+import VolverInicio from "@/components/VolverInicio";
 
 export const dynamic = "force-dynamic";
 
@@ -26,10 +25,7 @@ export default async function PaginaReservar() {
   return (
     <main className="publico mx-auto max-w-md px-4 py-6">
       <FondoFoto />
-      <Link href="/" className="flex items-center gap-1 text-sm text-suave">
-        <ChevronLeft size={16} />
-        Inicio
-      </Link>
+      <VolverInicio />
       <h1 className="mt-3 text-3xl font-bold uppercase">Reservar cita</h1>
       <Reserva
         servicios={servicios.data ?? []}
