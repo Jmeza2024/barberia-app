@@ -25,7 +25,8 @@ type Servicio = {
 };
 type Estilista = { id: string; nombre: string; foto_url: string | null };
 type Relacion = { estilista_id: string; servicio_id: string };
-type Hora = { estilista_id: string; inicio: string };
+// reservada = ya tiene cita: se muestra en rojo y no se puede tocar.
+type Hora = { inicio: string; reservada: boolean };
 
 type Props = {
   servicios: Servicio[];
@@ -63,7 +64,8 @@ export default function Reserva({ servicios, estilistas, relacion, diasParaReser
 
   const dias = Array.from({ length: diasParaReservar + 1 }, (_, i) => sumarDias(hoyEnBogota(), i));
 
-  // Cada vez que cambia el servicio, el barbero o el día, pedimos las horas libres.
+  // Cada vez que cambia el servicio, el barbero o el día, pedimos las horas del día
+  // (libres y reservadas).
   useEffect(() => {
     if (paso !== 3 || !servicio) return;
     let cancelado = false;
@@ -71,7 +73,7 @@ export default function Reserva({ servicios, estilistas, relacion, diasParaReser
     setHora(null);
 
     supabase
-      .rpc("horas_disponibles", {
+      .rpc("horas_del_dia", {
         p_servicio: servicio.id,
         p_fecha: fecha,
         p_estilista: estilistaId === CUALQUIERA ? null : estilistaId,
@@ -79,12 +81,7 @@ export default function Reserva({ servicios, estilistas, relacion, diasParaReser
       .then(({ data, error }) => {
         if (cancelado) return;
         if (error) setError(error.message);
-        // Si es "cualquiera", varios barberos pueden tener la misma hora: la mostramos una vez.
-        const unicas = new Map<string, Hora>();
-        for (const h of (data as Hora[] | null) ?? []) {
-          if (!unicas.has(h.inicio)) unicas.set(h.inicio, h);
-        }
-        setHoras([...unicas.values()]);
+        setHoras((data as Hora[] | null) ?? []);
         setCargandoHoras(false);
       });
 
@@ -234,20 +231,38 @@ export default function Reserva({ servicios, estilistas, relacion, diasParaReser
             ) : horas.length === 0 ? (
               <p className="text-sm text-suave">No hay horas libres este día. Prueba otro.</p>
             ) : (
-              <div className="grid grid-cols-3 gap-2">
-                {horas.map((h) => (
-                  <button
-                    key={h.inicio}
-                    onClick={() => {
-                      setHora(h.inicio);
-                      setPaso(4);
-                    }}
-                    className="rounded-lg border border-borde bg-tarjeta py-3 text-sm font-medium hover:border-white"
-                  >
-                    {formatoHora(h.inicio)}
-                  </button>
-                ))}
-              </div>
+              <>
+                {horas.every((h) => h.reservada) && (
+                  <p className="mb-3 text-sm text-suave">Este día ya está lleno. Prueba otro.</p>
+                )}
+                <div className="grid grid-cols-3 gap-2">
+                  {horas.map((h) =>
+                    h.reservada ? (
+                      <div
+                        key={h.inicio}
+                        aria-disabled
+                        className="rounded-lg border border-red-500/60 bg-red-950/60 py-2 text-center text-red-300"
+                      >
+                        <span className="block text-sm font-medium">
+                          {formatoHora(h.inicio)}
+                        </span>
+                        <span className="block text-[10px] leading-tight">Hora reservada</span>
+                      </div>
+                    ) : (
+                      <button
+                        key={h.inicio}
+                        onClick={() => {
+                          setHora(h.inicio);
+                          setPaso(4);
+                        }}
+                        className="rounded-lg border border-borde bg-tarjeta py-3 text-sm font-medium hover:border-white"
+                      >
+                        {formatoHora(h.inicio)}
+                      </button>
+                    ),
+                  )}
+                </div>
+              </>
             )}
           </div>
         </section>
