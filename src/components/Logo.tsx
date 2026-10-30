@@ -1,53 +1,49 @@
-// El logo de Navia Barber Club, dibujado con SVG (líneas y texto), así se ve
+// El logo de Navia Barber Studio, dibujado con SVG (líneas y texto), así se ve
 // nítido en cualquier tamaño y no hay que cargar una imagen.
 //
 // <Logo>: el sello completo, con el texto alrededor. Para la portada y el ingreso.
-// <MarcaLogo>: solo el círculo con la N. Para lugares pequeños como el panel.
+// <MarcaLogo>: solo el círculo con la NV. Para lugares pequeños como el panel.
 
-// Las tijeras de lucide, para usarlas dentro del SVG.
-function Tijeras({ x, y, escala, color }: { x: number; y: number; escala: number; color: string }) {
+// La NV del dueño: dos piezas inclinadas. Las medidas vienen de su imagen
+// original, por eso son números grandes; se achica con "scale" donde se use.
+// Ocupa de x=402 a x=830 y de y=452 a y=925 (centro en 616, 688.5).
+function MarcaNV({ cx, cy, alto, color }: { cx: number; cy: number; alto: number; color: string }) {
+  const k = alto / 473;
   return (
-    <g
-      transform={`translate(${x},${y}) rotate(-90) scale(${escala}) translate(-12,-12)`}
-      fill="none"
-      stroke={color}
-      strokeWidth={1.6}
-      strokeLinecap="round"
-    >
-      <circle cx="6" cy="6" r="3" />
-      <circle cx="6" cy="18" r="3" />
-      <line x1="20" y1="4" x2="8.12" y2="15.88" />
-      <line x1="14.47" y1="14.48" x2="20" y2="20" />
-      <line x1="8.12" y1="8.12" x2="12" y2="12" />
+    <g fill={color} transform={`translate(${cx - 616 * k} ${cy - 688.5 * k}) scale(${k})`}>
+      <polygon points="439,584 493,568 709,833 632,856 497,680 480,901 402,925" />
+      <polygon points="517,548 596,524 735,703 752,476 830,452 795,800 740,817" />
     </g>
   );
 }
 
-const titulo = { fontFamily: "var(--font-oswald), sans-serif" };
+const anillo = { fontFamily: "var(--font-cinzel), serif" };
 
 export default function Logo({ className = "" }: { className?: string }) {
   return (
-    <svg viewBox="0 0 400 400" className={className} role="img" aria-label="Navia Barber Club">
+    <svg viewBox="0 0 200 200" className={className} role="img" aria-label="Navia Barber Studio">
       <defs>
-        {/* El camino circular por donde va el texto de alrededor. */}
-        <path id="arco-logo" d="M 200 200 m -132 0 a 132 132 0 1 1 264 0 a 132 132 0 1 1 -264 0" />
+        {/* Los arcos por donde va el texto: arriba "NAVIA BARBER", abajo "STUDIO". */}
+        <path id="arco-arriba" d="M27 100 A73 73 0 0 1 173 100" />
+        <path id="arco-abajo" d="M20 100 A80 80 0 0 0 180 100" />
       </defs>
-      <circle cx="200" cy="200" r="190" fill="rgb(0 0 0 / 0.55)" />
-      <circle cx="200" cy="200" r="168" fill="none" stroke="#fff" strokeWidth="3" />
-      <circle cx="200" cy="200" r="110" fill="none" stroke="#71717a" strokeWidth="1" />
-      <text style={titulo} fontWeight="500" fontSize="24" letterSpacing="8" fill="#d4d4d8">
-        <textPath href="#arco-logo">NAVIA · BARBER CLUB · NAVIA · BARBER CLUB ·</textPath>
+      <circle cx="100" cy="100" r="95" fill="rgb(0 0 0 / 0.55)" stroke="#e5e5e5" strokeWidth="2.5" />
+      <circle cx="100" cy="100" r="60" fill="none" stroke="#52525b" strokeWidth="1" />
+      <text style={anillo} fontWeight="700" fontSize="17" letterSpacing="6" textAnchor="middle" fill="#d4d4d8">
+        <textPath href="#arco-arriba" startOffset="50%">NAVIA BARBER</textPath>
       </text>
-      <Tijeras x={200} y={132} escala={1.4} color="#a1a1aa" />
-      <text x="200" y="208" textAnchor="middle" style={titulo} fontWeight="700" fontSize="64" letterSpacing="2" fill="#fff">
-        NAVIA
+      <text style={anillo} fontWeight="700" fontSize="15" letterSpacing="6" textAnchor="middle" fill="#d4d4d8">
+        <textPath href="#arco-abajo" startOffset="50%">STUDIO</textPath>
       </text>
-      {/* El bigote */}
-      <path
-        transform="translate(160,222) scale(2)"
-        d="M0 6 C4 -1 12 -1 20 5 C28 -1 36 -1 40 6 C36 3 32 7 26 8 C23 8.5 21 7.5 20 6.5 C19 7.5 17 8.5 14 8 C8 7 4 3 0 6 Z"
-        fill="#fff"
-      />
+      <circle cx="22" cy="100" r="2" fill="#d4d4d8" />
+      <circle cx="178" cy="100" r="2" fill="#d4d4d8" />
+      <MarcaNV cx={100} cy={93} alto={70} color="#fff" />
+      {/* Las tijeras, debajo de la NV */}
+      <g transform="translate(100 150) scale(0.9)" fill="none" stroke="#a1a1aa" strokeWidth="1.6">
+        <circle cx="-5" cy="4" r="3" />
+        <circle cx="5" cy="4" r="3" />
+        <path d="M-3 2 L6 -8 M3 2 L-6 -8" />
+      </g>
     </svg>
   );
 }
@@ -57,9 +53,7 @@ export function MarcaLogo({ className = "" }: { className?: string }) {
     <svg viewBox="0 0 64 64" className={className} aria-hidden>
       <circle cx="32" cy="32" r="30" fill="#0b0b0c" stroke="#fff" strokeWidth="2.5" />
       <circle cx="32" cy="32" r="24" fill="none" stroke="#71717a" strokeWidth="1" />
-      <text x="32" y="41" textAnchor="middle" style={titulo} fontWeight="700" fontSize="26" fill="#fff">
-        N
-      </text>
+      <MarcaNV cx={32} cy={32} alto={30} color="#fff" />
     </svg>
   );
 }
