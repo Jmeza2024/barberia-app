@@ -58,7 +58,7 @@ export default async function Inicio() {
         <div className="rayos absolute inset-0" aria-hidden />
         <div className="relative mx-auto flex min-h-[82svh] max-w-md flex-col items-center justify-center px-4 py-16 text-center">
           {/* El logo hace de título. El nombre queda escrito para Google y lectores de pantalla. */}
-          <h1 className="sr-only">{negocio?.nombre ?? "Navia Barber Club"}</h1>
+          <h1 className="sr-only">{negocio?.nombre ?? "Navia Barber Studio"}</h1>
           <Logo className="w-64 drop-shadow-[0_0_40px_rgb(255_255_255/0.25)] sm:w-72" />
           {negocio && (
             <p className="mt-4 flex items-center justify-center gap-1.5 text-sm text-suave">

@@ -10,8 +10,8 @@ const oswald = Oswald({ variable: "--font-oswald", subsets: ["latin"] });
 const cinzel = Cinzel({ variable: "--font-cinzel", subsets: ["latin"], weight: "700" });
 
 export const metadata: Metadata = {
-  title: "Navia Barber Club",
-  description: "Reserva tu cita en Navia Barber Club",
+  title: "Navia Barber Studio",
+  description: "Reserva tu cita en Navia Barber Studio",
 };
 
 // El color de la barra del navegador en el celular.

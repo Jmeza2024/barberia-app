@@ -5,7 +5,7 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Navia Barber Club",
+    name: "Navia Barber Studio",
     short_name: "Navia",
     description: "Reserva tu cita en la barbería",
     start_url: "/",
