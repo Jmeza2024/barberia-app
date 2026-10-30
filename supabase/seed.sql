@@ -1,7 +1,7 @@
 -- Datos de ejemplo para probar. Cámbialos por los reales de la barbería.
 -- Cómo usarlo: Supabase > SQL Editor > pegar > Run (después de 0001_esquema.sql).
 
-insert into negocio (id, nombre) values (1, 'Navia Barber Club')
+insert into negocio (id, nombre) values (1, 'Navia Barber Studio')
 on conflict (id) do nothing;
 
 insert into servicios (nombre, categoria, precio, duracion_min) values
