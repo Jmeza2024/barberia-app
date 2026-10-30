@@ -12,6 +12,8 @@ import FondoFoto from "@/components/FondoFoto";
 // para que un cambio de precio se vea de inmediato.
 export const dynamic = "force-dynamic";
 
+type Producto = { id: string; nombre: string; precio: number; agotado: boolean };
+
 type Servicio = {
   id: string;
   nombre: string;
@@ -23,7 +25,7 @@ type Servicio = {
 export default async function Inicio() {
   const supabase = await crearClienteServidor();
 
-  const [{ data: negocio }, { data: servicios, error }] = await Promise.all([
+  const [{ data: negocio }, { data: servicios, error }, { data: productos }] = await Promise.all([
     supabase
       .from("negocio")
       .select("nombre, direccion, telefono_whatsapp, hora_apertura, hora_cierre, cortes_para_premio")
@@ -34,6 +36,8 @@ export default async function Inicio() {
       .eq("activo", true)
       .order("categoria")
       .order("precio"),
+    // Solo nombre, precio y si está agotado: el costo y las unidades no salen.
+    supabase.rpc("productos_a_la_venta"),
   ]);
 
   // Agrupa los servicios por categoría: { Cortes: [...], Barba: [...] }
@@ -136,6 +140,31 @@ export default async function Inicio() {
             </div>
           ))}
         </section>
+
+        {/* Productos a la venta: solo aparece si el dueño tiene alguno activo */}
+        {(productos as Producto[] | null)?.length ? (
+          <section className="mt-6 rounded-2xl border border-borde bg-tarjeta px-5 py-8">
+            <Adorno />
+            <h2 className="texto-plata mt-3 text-center text-3xl font-bold tracking-[0.12em] uppercase">
+              Productos
+            </h2>
+            <ul className="mt-8 space-y-4">
+              {(productos as Producto[]).map((producto) => (
+                <li key={producto.id}>
+                  <div className="flex items-baseline gap-2">
+                    <p className={`font-medium ${producto.agotado ? "text-suave" : ""}`}>{producto.nombre}</p>
+                    <span className="flex-1 border-b border-dotted border-zinc-600" />
+                    <p className={`font-semibold ${producto.agotado ? "text-suave" : ""}`}>
+                      {formatoPesos(producto.precio)}
+                    </p>
+                  </div>
+                  {producto.agotado && <p className="text-xs text-suave">Agotado</p>}
+                </li>
+              ))}
+            </ul>
+            <p className="mt-6 text-center text-xs text-suave">Pídelos en la barbería</p>
+          </section>
+        ) : null}
 
         {negocio?.direccion && (
           <footer className="mt-10 text-center text-sm text-suave">
