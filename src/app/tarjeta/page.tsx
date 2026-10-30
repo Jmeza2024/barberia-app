@@ -2,9 +2,10 @@
 // No necesita cuenta: el celular con el que reserva es su tarjeta.
 // El número viaja en la dirección (?tel=300...), así que es un formulario simple.
 import Link from "next/link";
-import { CalendarPlus, ChevronLeft } from "lucide-react";
+import { CalendarPlus } from "lucide-react";
 import { crearClienteServidor } from "@/lib/supabase/server";
 import FondoFoto from "@/components/FondoFoto";
+import VolverInicio from "@/components/VolverInicio";
 import TarjetaSellos, { type Tarjeta } from "@/components/TarjetaSellos";
 
 export const dynamic = "force-dynamic";
@@ -29,10 +30,7 @@ export default async function PaginaTarjeta({
   return (
     <main className="publico mx-auto max-w-md px-4 py-6">
       <FondoFoto />
-      <Link href="/" className="flex items-center gap-1 text-sm text-suave">
-        <ChevronLeft size={16} />
-        Inicio
-      </Link>
+      <VolverInicio />
       <h1 className="mt-3 text-3xl font-bold uppercase">Mi tarjeta</h1>
       <p className="mt-1 text-sm text-suave">
         Por cada {meta} cortes, el siguiente es gratis. Escribe el celular con el que reservas.

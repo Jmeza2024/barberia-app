@@ -1,6 +1,5 @@
 // Página /cita/[codigo]. Los corchetes significan que esa parte de la
 // dirección cambia: /cita/abc123 muestra la cita con código "abc123".
-import Link from "next/link";
 import { CalendarDays, Check, Gift, Scissors, User } from "lucide-react";
 import TarjetaSellos from "@/components/TarjetaSellos";
 import { crearClienteServidor } from "@/lib/supabase/server";
@@ -8,6 +7,7 @@ import { formatoFechaLarga, formatoHora, formatoPesos } from "@/lib/formato";
 import { cancelarCita } from "./acciones";
 import { nombreEstado, type EstadoCita } from "@/lib/estados";
 import FondoFoto from "@/components/FondoFoto";
+import VolverInicio from "@/components/VolverInicio";
 
 export const dynamic = "force-dynamic";
 
@@ -40,9 +40,7 @@ export default async function PaginaCita({
       <main className="publico mx-auto max-w-md px-4 py-10">
         <FondoFoto />
         <h1 className="text-2xl font-bold">No encontramos esta cita</h1>
-        <Link href="/" className="mt-4 inline-block underline">
-          Volver al inicio
-        </Link>
+        <VolverInicio className="mt-4" />
       </main>
     );
   }
@@ -112,9 +110,7 @@ export default async function PaginaCita({
         </form>
       )}
 
-      <Link href="/" className="mt-6 inline-block text-sm text-suave underline">
-        Volver al inicio
-      </Link>
+      <VolverInicio className="mt-6" />
     </main>
   );
 }
