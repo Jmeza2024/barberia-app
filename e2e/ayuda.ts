@@ -12,6 +12,13 @@ export const BARBERO = {
 
 export const ESCRIBIR = process.env.E2E_ESCRIBIR === "1";
 
+// Los usuarios de ejemplo solo existen en la base local. Contra la base real,
+// las pruebas del panel necesitan un usuario de prueba de verdad en las variables E2E_*.
+const BASE_LOCAL = /127\.0\.0\.1|localhost/.test(process.env.NEXT_PUBLIC_SUPABASE_URL ?? "");
+export const HAY_DUENO = BASE_LOCAL || !!process.env.E2E_DUENO_CORREO;
+export const HAY_BARBERO = BASE_LOCAL || !!process.env.E2E_BARBERO_CORREO;
+export const SIN_USUARIO = "Falta un usuario de prueba: pon E2E_DUENO_CORREO / E2E_BARBERO_CORREO y su clave";
+
 // Ninguna pantalla debe mostrar el error genérico de Next.
 export async function sinErrores(page: Page) {
   await expect(page.getByText("Application error")).toHaveCount(0);

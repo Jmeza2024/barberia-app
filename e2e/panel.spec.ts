@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { BARBERO, DUENO, ingresar, sinErrores } from "./ayuda";
+import { BARBERO, DUENO, HAY_BARBERO, HAY_DUENO, SIN_USUARIO, ingresar, sinErrores } from "./ayuda";
 
 test.describe("Ingreso", () => {
   test("sin sesión, el panel manda a /ingresar", async ({ page }) => {
@@ -18,6 +18,7 @@ test.describe("Ingreso", () => {
 });
 
 test.describe("Panel del dueño", () => {
+  test.skip(!HAY_DUENO, SIN_USUARIO);
   test.beforeEach(async ({ page }) => ingresar(page, DUENO));
 
   const pantallas: [string, string | RegExp][] = [
@@ -44,6 +45,7 @@ test.describe("Panel del dueño", () => {
 });
 
 test.describe("Panel del barbero", () => {
+  test.skip(!HAY_BARBERO, SIN_USUARIO);
   test.beforeEach(async ({ page }) => ingresar(page, BARBERO));
 
   test("ve su agenda", async ({ page }) => {
