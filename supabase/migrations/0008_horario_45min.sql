@@ -11,18 +11,22 @@ alter table negocio alter column hora_apertura set default '08:00';
 alter table negocio alter column hora_cierre   set default '20:00';
 
 -- 2. Horario de cada barbero, partido en dos para el descanso:
---    mañana de 8 a 12 y tarde de 1 a 8. Se conservan los días que cada uno trabaja.
-create temp table dias_trabajo as
-  select distinct estilista_id, dia_semana from horarios;
-
-delete from horarios;
-
+--    mañana de 8 a 12 y tarde de 1 a 8.
+--    Todo en una sola instrucción: borra los horarios viejos y crea los nuevos
+--    con los mismos días. Si un barbero no tenía horario, queda de lunes a sábado.
+with viejos as (
+  delete from horarios returning estilista_id, dia_semana
+),
+dias as (
+  select distinct estilista_id, dia_semana from viejos
+  union
+  select e.id, d.dia from estilistas e cross join generate_series(1, 6) as d(dia)
+  where not exists (select 1 from viejos v where v.estilista_id = e.id)
+)
 insert into horarios (estilista_id, dia_semana, hora_inicio, hora_fin)
-  select estilista_id, dia_semana, time '08:00', time '12:00' from dias_trabajo
-  union all
-  select estilista_id, dia_semana, time '13:00', time '20:00' from dias_trabajo;
-
-drop table dias_trabajo;
+  select dias.estilista_id, dias.dia_semana, t.inicio, t.fin
+  from dias
+  cross join (values (time '08:00', time '12:00'), (time '13:00', time '20:00')) as t(inicio, fin);
 
 -- 3. Los cortes duran 45 minutos (los servicios con "corte" en el nombre).
 --    Los demás (barba, cejas...) se cambian en el panel: Más > Servicios.
