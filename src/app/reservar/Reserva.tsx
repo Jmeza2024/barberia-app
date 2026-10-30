@@ -35,7 +35,7 @@ type Props = {
   diasParaReservar: number;
 };
 
-// "cualquiera" significa que el cliente no tiene preferencia de barbero.
+// "cualquiera" = todavía no ha elegido barbero (en el paso 2 siempre elige uno).
 const CUALQUIERA = "cualquiera";
 
 export default function Reserva({ servicios, estilistas, relacion, diasParaReservar }: Props) {
@@ -174,7 +174,7 @@ export default function Reserva({ servicios, estilistas, relacion, diasParaReser
         <section className="mt-4">
           <h2 className="text-lg font-semibold">¿Con quién?</h2>
           <ul className="mt-3 space-y-2">
-            {[{ id: CUALQUIERA, nombre: "Me da igual", foto_url: null }, ...estilistasDelServicio].map(
+            {estilistasDelServicio.map(
               (e) => (
                 <li key={e.id}>
                   <button
@@ -185,7 +185,7 @@ export default function Reserva({ servicios, estilistas, relacion, diasParaReser
                     className="flex w-full items-center gap-3 rounded-xl border border-borde bg-tarjeta p-4 text-left"
                   >
                     <span className="flex h-10 w-10 items-center justify-center rounded-full bg-boton font-semibold">
-                      {e.id === CUALQUIERA ? "?" : e.nombre.charAt(0)}
+                      {e.nombre.charAt(0)}
                     </span>
                     <span className="font-medium">{e.nombre}</span>
                   </button>
