@@ -302,6 +302,7 @@ export default function Reserva({ servicios, estilistas, relacion, diasParaReser
               value={nombre}
               onChange={(e) => setNombre(e.target.value)}
               placeholder="Tu nombre"
+              maxLength={60}
               className="w-full rounded-lg border border-borde bg-transparent p-3"
             />
             <input
@@ -317,6 +318,7 @@ export default function Reserva({ servicios, estilistas, relacion, diasParaReser
               value={nota}
               onChange={(e) => setNota(e.target.value)}
               placeholder="Nota opcional (ej. degradado bajo)"
+              maxLength={300}
               rows={2}
               className="w-full rounded-lg border border-borde bg-transparent p-3"
             />
