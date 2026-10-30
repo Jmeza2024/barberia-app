@@ -1,7 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <!-- Ícono de Navia Barber Club: círculo con la N (la N dibujada con líneas). -->
+  <!-- Ícono de Navia Barber Studio: círculo con la NV del dueño. -->
   <rect width="64" height="64" rx="14" fill="#0b0b0c"/>
   <circle cx="32" cy="32" r="25" fill="none" stroke="#f4f4f5" stroke-width="2.5"/>
   <circle cx="32" cy="32" r="20" fill="none" stroke="#71717a" stroke-width="1"/>
-  <path d="M24 42V22h3.2l9.6 13.6V22H40v20h-3.2L27.2 28.4V42z" fill="#f4f4f5"/>
+  <g fill="#f4f4f5" transform="translate(32 32) scale(0.0539) translate(-616 -688.5)">
+    <polygon points="439,584 493,568 709,833 632,856 497,680 480,901 402,925"/>
+    <polygon points="517,548 596,524 735,703 752,476 830,452 795,800 740,817"/>
+  </g>
 </svg>
