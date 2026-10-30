@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { exigirDueno } from "@/lib/sesion";
-import { crearClienteAdmin } from "@/lib/supabase/admin";
+import { crearClienteAdmin, FALTA_LLAVE } from "@/lib/supabase/admin";
 
 export type EstadoFormulario = {
   error: string | null;
@@ -41,16 +41,21 @@ export async function crearBarbero(
 
   // 1. Crear el usuario. Esto necesita la llave maestra (cliente admin).
   const admin = crearClienteAdmin();
+  if (!admin) return fallo(FALTA_LLAVE);
   const { data: creado, error: errorUsuario } = await admin.auth.admin.createUser({
     email: correo,
     password: contrasena,
     email_confirm: true, // no le pedimos que confirme el correo
   });
   if (errorUsuario || !creado.user) {
+    const mensaje = errorUsuario?.message ?? "";
     return fallo(
-      errorUsuario?.message.includes("already")
+      mensaje.includes("already")
         ? "Ya existe una cuenta con ese correo"
-        : `No se pudo crear la cuenta: ${errorUsuario?.message}`,
+        : // Llave puesta pero equivocada (vieja, borrada o pegada con el nombre adelante).
+          /api key|jwt|unauthorized|invalid/i.test(mensaje)
+          ? "La clave secreta del servidor no es válida. Revisa SUPABASE_SERVICE_ROLE_KEY en Netlify."
+          : `No se pudo crear la cuenta: ${mensaje}`,
     );
   }
 
@@ -143,7 +148,12 @@ export async function borrarBarbero(id: string) {
   }
 
   // También borramos su cuenta, para que ya no pueda entrar.
-  if (barbero.usuario_id) await crearClienteAdmin().auth.admin.deleteUser(barbero.usuario_id);
+  const admin = crearClienteAdmin();
+  if (barbero.usuario_id && admin) await admin.auth.admin.deleteUser(barbero.usuario_id);
   revalidatePath("/panel", "layout");
-  volver(`${barbero.nombre} fue borrado`);
+  volver(
+    barbero.usuario_id && !admin
+      ? `${barbero.nombre} fue borrado, pero su cuenta sigue activa. ${FALTA_LLAVE}`
+      : `${barbero.nombre} fue borrado`,
+  );
 }
