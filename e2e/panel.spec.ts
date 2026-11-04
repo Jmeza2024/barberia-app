@@ -31,6 +31,7 @@ test.describe("Panel del dueño", () => {
     ["/panel/barberos", "Barberos"],
     ["/panel/recordatorios", "Recordatorios"],
     ["/panel/reportes", "Reportes"],
+    ["/panel/horario", "Horario y días libres"],
     ["/panel/mas", "Más"],
   ];
 
