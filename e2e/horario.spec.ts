@@ -36,8 +36,8 @@ test.describe("Horario y días libres", () => {
     await expect(page.getByRole("heading", { level: 1, name: "Horario y días libres" })).toBeVisible();
 
     // Jueves: abre 10:00, cierra 14:00, sin pausa.
-    await page.locator('input[name="abre-4"]').fill("10:00");
-    await page.locator('input[name="cierra-4"]').fill("14:00");
+    await page.locator('select[name="abre-4"]').selectOption("10:00");
+    await page.locator('select[name="cierra-4"]').selectOption("14:00");
     await page.locator('input[name="descanso-4"]').uncheck();
     await page.getByRole("button", { name: "Guardar horario" }).click();
     await expect(page.getByText("Horario guardado")).toBeVisible();
@@ -50,8 +50,8 @@ test.describe("Horario y días libres", () => {
     expect(enBogota.every((h) => h >= "10:00" && h < "14:00")).toBe(true);
 
     // Deja el jueves como estaba.
-    await page.locator('input[name="abre-4"]').fill("08:00");
-    await page.locator('input[name="cierra-4"]').fill("20:00");
+    await page.locator('select[name="abre-4"]').selectOption("08:00");
+    await page.locator('select[name="cierra-4"]').selectOption("20:00");
     await page.locator('input[name="descanso-4"]').check();
     await page.getByRole("button", { name: "Guardar horario" }).click();
     await expect(page.getByText("Horario guardado")).toBeVisible();
@@ -61,8 +61,8 @@ test.describe("Horario y días libres", () => {
   test("una hora de cierre antes de la apertura no se guarda", async ({ page }) => {
     await ingresar(page, DUENO);
     await page.goto("/panel/horario");
-    await page.locator('input[name="abre-2"]').fill("18:00");
-    await page.locator('input[name="cierra-2"]').fill("09:00");
+    await page.locator('select[name="abre-2"]').selectOption("18:00");
+    await page.locator('select[name="cierra-2"]').selectOption("09:00");
     await page.getByRole("button", { name: "Guardar horario" }).click();
     await expect(page.getByText(/la hora de cierre debe ser después/)).toBeVisible();
   });
