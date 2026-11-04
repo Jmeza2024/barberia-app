@@ -1,6 +1,6 @@
 // Página /panel/mas: en el celular, las opciones que no caben en la barra de abajo.
 import Link from "next/link";
-import { BarChart3, ChevronRight, LogOut, Package, Scissors, Users } from "lucide-react";
+import { BarChart3, ChevronRight, Clock, LogOut, Package, Scissors, Users } from "lucide-react";
 import { obtenerPerfil } from "@/lib/sesion";
 import { cerrarSesion } from "../../ingresar/acciones";
 
@@ -12,6 +12,12 @@ export default async function PaginaMas() {
 
   const opciones = [
     { href: "/panel/productos", nombre: "Productos", detalle: "Precios y unidades", icono: Package },
+    {
+      href: "/panel/horario",
+      nombre: "Horario y días libres",
+      detalle: esDueno ? "Apertura, pausa, cierre y días cerrados" : "Cerrar un día que no trabajas",
+      icono: Clock,
+    },
     ...(esDueno
       ? [
           { href: "/panel/servicios", nombre: "Servicios", detalle: "Nombres, precios y duración", icono: Scissors },

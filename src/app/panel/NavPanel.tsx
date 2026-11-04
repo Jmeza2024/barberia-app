@@ -9,6 +9,7 @@ import {
   BarChart3,
   Bell,
   CalendarDays,
+  Clock,
   Ellipsis,
   Package,
   Receipt,
@@ -30,6 +31,7 @@ export default function NavPanel({ esDueno }: { esDueno: boolean }) {
   ];
   const otras: Opcion[] = [
     { href: "/panel/productos", nombre: "Productos", icono: Package },
+    { href: "/panel/horario", nombre: "Horario", icono: Clock },
     ...(esDueno
       ? [
           { href: "/panel/servicios", nombre: "Servicios", icono: Scissors },
