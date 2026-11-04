@@ -10,6 +10,7 @@ import {
   fechaEnBogota,
   formatoFechaLarga,
   formatoHora,
+  formatoHoraSola,
   hoyEnBogota,
 } from "@/lib/formato";
 import Aviso from "@/components/Aviso";
@@ -43,6 +44,26 @@ const UN_DIA = 24 * 60 * 60 * 1000;
 
 const estiloCampo = "rounded-lg border border-borde bg-transparent p-2";
 const corta = (hora: string | null) => (hora ?? "").slice(0, 5);
+
+// Horas cada media hora, de 5:00 a. m. a 11:30 p. m., escritas en formato de 12 horas.
+const HORAS = Array.from({ length: 38 }, (_, i) => {
+  const minutos = 5 * 60 + i * 30;
+  return `${String(Math.floor(minutos / 60)).padStart(2, "0")}:${minutos % 60 ? "30" : "00"}`;
+});
+
+function SelectorHora({ nombre, valor }: { nombre: string; valor: string }) {
+  // Si la base tiene una hora que no está en la lista (ej. 8:15), se agrega para no perderla.
+  const opciones = HORAS.includes(valor) ? HORAS : [...HORAS, valor].sort();
+  return (
+    <select name={nombre} defaultValue={valor} className={`${estiloCampo} block w-full bg-tarjeta`}>
+      {opciones.map((h) => (
+        <option key={h} value={h}>
+          {formatoHoraSola(h)}
+        </option>
+      ))}
+    </select>
+  );
+}
 
 export default async function PaginaHorario({
   searchParams,
@@ -135,48 +156,38 @@ export default async function PaginaHorario({
           <p className="mt-1 text-sm text-suave">
             Aplica para todos los barberos. Los clientes solo pueden reservar dentro de este horario.
           </p>
-          <ul className="mt-4 divide-y divide-borde">
+          <ul className="mt-4 space-y-4">
             {ORDEN_DIAS.map((dia) => {
               const h = horario?.find((x) => x.dia_semana === dia);
               return (
-                <li key={dia} className="py-3 text-sm">
-                  <label className="flex items-center gap-2 font-medium">
-                    <input type="checkbox" name={`abierto-${dia}`} defaultChecked={h?.abierto} className="h-4 w-4" />
+                <li key={dia} className="rounded-xl border-2 border-white/70 bg-black/30 p-4 text-sm">
+                  <label className="flex items-center gap-3 text-base font-semibold">
+                    <input type="checkbox" name={`abierto-${dia}`} defaultChecked={h?.abierto} className="h-5 w-5" />
                     {NOMBRES_DIA[dia]}
-                    <span className="text-xs font-normal text-suave">(marcado = abre)</span>
+                    <span className="ml-auto text-xs font-normal text-suave">Marcado = abre</span>
                   </label>
-                  <div className="mt-2 grid grid-cols-2 gap-2">
+                  <div className="mt-3 grid grid-cols-2 gap-2">
                     <label>
                       <span className="text-xs text-suave">Abre</span>
-                      <input type="time" name={`abre-${dia}`} defaultValue={corta(h?.abre ?? "08:00")} className={`${estiloCampo} block w-full`} />
+                      <SelectorHora nombre={`abre-${dia}`} valor={corta(h?.abre ?? "08:00")} />
                     </label>
                     <label>
                       <span className="text-xs text-suave">Cierra</span>
-                      <input type="time" name={`cierra-${dia}`} defaultValue={corta(h?.cierra ?? "20:00")} className={`${estiloCampo} block w-full`} />
+                      <SelectorHora nombre={`cierra-${dia}`} valor={corta(h?.cierra ?? "20:00")} />
                     </label>
                   </div>
-                  <label className="mt-2 flex items-center gap-2 text-xs text-suave">
+                  <label className="mt-3 flex items-center gap-2 text-xs text-suave">
                     <input type="checkbox" name={`descanso-${dia}`} defaultChecked={!!h?.descanso_inicio} />
                     Tiene pausa (almuerzo)
                   </label>
                   <div className="mt-1 grid grid-cols-2 gap-2">
                     <label>
                       <span className="text-xs text-suave">Pausa desde</span>
-                      <input
-                        type="time"
-                        name={`descanso_inicio-${dia}`}
-                        defaultValue={corta(h?.descanso_inicio ?? "12:00")}
-                        className={`${estiloCampo} block w-full`}
-                      />
+                      <SelectorHora nombre={`descanso_inicio-${dia}`} valor={corta(h?.descanso_inicio ?? "12:00")} />
                     </label>
                     <label>
                       <span className="text-xs text-suave">Hasta</span>
-                      <input
-                        type="time"
-                        name={`descanso_fin-${dia}`}
-                        defaultValue={corta(h?.descanso_fin ?? "13:00")}
-                        className={`${estiloCampo} block w-full`}
-                      />
+                      <SelectorHora nombre={`descanso_fin-${dia}`} valor={corta(h?.descanso_fin ?? "13:00")} />
                     </label>
                   </div>
                 </li>
