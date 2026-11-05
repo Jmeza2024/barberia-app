@@ -93,6 +93,39 @@ input::placeholder {
   opacity: 0.7;
 }
 
+/* El campo o la opción que se está tocando se ilumina, para que se note dónde vas. */
+input:not([type="checkbox"]):focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: #ffffff;
+  box-shadow: 0 0 0 3px rgb(255 255 255 / 0.25);
+}
+input[type="checkbox"] {
+  accent-color: #ffffff;
+}
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
+}
+button:not(:disabled):active {
+  transform: scale(0.98);
+}
+
+/* El cuadro donde estás llenando algo también se resalta (borde blanco y brillo). */
+.rounded-xl.border,
+.rounded-xl.border-2,
+.rounded-2xl.border {
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.rounded-xl.border:focus-within,
+.rounded-xl.border-2:focus-within,
+.rounded-2xl.border:focus-within {
+  border-color: #ffffff;
+  box-shadow: 0 0 0 3px rgb(255 255 255 / 0.18), 0 8px 30px rgb(255 255 255 / 0.06);
+}
+
 /* Todos los títulos principales con el brillo plateado. */
 h1 {
   background-image: linear-gradient(180deg, #ffffff 30%, #a1a1aa 100%);

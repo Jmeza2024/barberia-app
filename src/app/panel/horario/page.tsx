@@ -160,7 +160,10 @@ export default async function PaginaHorario({
             {ORDEN_DIAS.map((dia) => {
               const h = horario?.find((x) => x.dia_semana === dia);
               return (
-                <li key={dia} className="rounded-xl border-2 border-white/70 bg-black/30 p-4 text-sm">
+                <li
+                  key={dia}
+                  className="rounded-xl border-2 border-white/70 bg-black/30 p-4 text-sm transition-opacity has-[input[name^=abierto]:not(:checked)]:opacity-50"
+                >
                   <label className="flex items-center gap-3 text-base font-semibold">
                     <input type="checkbox" name={`abierto-${dia}`} defaultChecked={h?.abierto} className="h-5 w-5" />
                     {NOMBRES_DIA[dia]}
